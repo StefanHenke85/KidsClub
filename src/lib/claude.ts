@@ -1,9 +1,3 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
-export const genAI = new GoogleGenerativeAI(
-  process.env.GEMINI_API_KEY || ""
-);
-
 export const KIKO_SYSTEM_PROMPT = `Du bist Kiko, ein freundlicher Helfer-Fuchs für Kinder im Alter von 6-9 Jahren in Deutschland.
 
 Deine Regeln – die du IMMER einhalten musst:

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { KIKO_SYSTEM_PROMPT } from "@/lib/claude";
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { ChatMessage } from "@/types";
 
 export const runtime = "nodejs";
@@ -12,35 +11,39 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Keine Nachricht" }, { status: 400 });
   }
 
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
-      { error: "Kein API-Key konfiguriert. Bitte GEMINI_API_KEY in .env.local eintragen." },
+      { error: "Kein API-Key konfiguriert. Bitte GROQ_API_KEY in .env.local eintragen." },
       { status: 503 }
     );
   }
 
   try {
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash",
-      systemInstruction: KIKO_SYSTEM_PROMPT,
-      generationConfig: {
-        maxOutputTokens: 300,
-        temperature: 0.3,
+    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
       },
+      body: JSON.stringify({
+        model: "llama-3.1-8b-instant",
+        max_tokens: 300,
+        temperature: 0.3,
+        messages: [
+          { role: "system", content: KIKO_SYSTEM_PROMPT },
+          ...messages.map((m) => ({ role: m.role, content: m.content })),
+        ],
+      }),
     });
 
-    const history = messages.slice(0, -1).map((m) => ({
-      role: m.role === "assistant" ? "model" : "user",
-      parts: [{ text: m.content }],
-    }));
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err?.error?.message ?? "Groq Fehler");
+    }
 
-    const lastMessage = messages[messages.length - 1].content;
-
-    const chat = model.startChat({ history });
-    const result = await chat.sendMessage(lastMessage);
-    const text = result.response.text();
+    const data = await res.json();
+    const text = data.choices?.[0]?.message?.content ?? "";
 
     return new NextResponse(text, {
       headers: { "Content-Type": "text/plain; charset=utf-8" },
