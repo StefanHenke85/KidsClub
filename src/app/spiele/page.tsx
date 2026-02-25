@@ -9,7 +9,7 @@ const GAMES = [
 
 export default function SpielePage() {
   return (
-    <PageWrapper emoji="🎮" title="Spielen" color="bg-green-50 dark:bg-slate-900">
+    <PageWrapper emoji="🎮" title="Spielen" color="bg-green-50 dark:bg-slate-900" backHref="/">
       <p className="text-kids-sm text-gray-500 dark:text-gray-400 font-semibold mb-5">
         Welches Spiel möchtest du spielen?
       </p>

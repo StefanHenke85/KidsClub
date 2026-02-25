@@ -28,7 +28,7 @@ export default function SuchePage() {
   };
 
   return (
-    <PageWrapper emoji="🔍" title="Suchen" color="bg-yellow-50 dark:bg-slate-900">
+    <PageWrapper emoji="🔍" title="Suchen" color="bg-yellow-50 dark:bg-slate-900" backHref="/">
       {/* Suchleiste */}
       <div className="flex gap-2 mb-4">
         <input

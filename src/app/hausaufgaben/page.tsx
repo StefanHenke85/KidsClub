@@ -93,7 +93,7 @@ export default function HausaufgabenPage() {
   };
 
   return (
-    <PageWrapper emoji="✏️" title="Hausaufgaben" color="bg-blue-50 dark:bg-slate-900">
+    <PageWrapper emoji="✏️" title="Hausaufgaben" color="bg-blue-50 dark:bg-slate-900" backHref="/">
       {/* API-Key Warnung */}
       {apiError && (
         <div className="mb-3 bg-red-100 dark:bg-red-900/40 border-2 border-red-300 rounded-kids px-4 py-3 text-sm font-bold text-red-700 dark:text-red-300">

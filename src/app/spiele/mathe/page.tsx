@@ -103,7 +103,7 @@ export default function MathePage() {
 
   if (!started) {
     return (
-      <PageWrapper emoji="🔢" title="Mathe" color="bg-blue-50 dark:bg-slate-900">
+      <PageWrapper emoji="🔢" title="Mathe" color="bg-blue-50 dark:bg-slate-900" backHref="/spiele">
         <KidsCard className="text-center mb-4 dark:bg-slate-800">
           <p className="text-kids-md font-bold text-gray-600 dark:text-gray-300 mb-4">
             Beantworte Aufgaben in {TIMER_START} Sekunden!
@@ -159,7 +159,7 @@ export default function MathePage() {
   if (gameOver) {
     const accuracy = total > 0 ? Math.round((correct / total) * 100) : 0;
     return (
-      <PageWrapper emoji="🔢" title="Mathe" color="bg-blue-50 dark:bg-slate-900">
+      <PageWrapper emoji="🔢" title="Mathe" color="bg-blue-50 dark:bg-slate-900" backHref="/spiele">
         {xpResult && <XpRewardPopup result={xpResult} onClose={clearResult} />}
         <KidsCard className="text-center py-8 dark:bg-slate-800">
           <div className="text-6xl mb-4">{score >= 50 ? "🎉" : "💪"}</div>
@@ -178,7 +178,7 @@ export default function MathePage() {
   }
 
   return (
-    <PageWrapper emoji="🔢" title="Mathe" color="bg-blue-50 dark:bg-slate-900">
+    <PageWrapper emoji="🔢" title="Mathe" color="bg-blue-50 dark:bg-slate-900" backHref="/spiele">
       <div className="flex justify-between items-center mb-4">
         <span className="text-kids-md font-black text-gray-700 dark:text-gray-200">⭐ {score}</span>
         <span className={`text-kids-lg font-black ${timer <= 10 ? "text-red-500 animate-pulse" : "text-gray-700 dark:text-gray-200"}`}>

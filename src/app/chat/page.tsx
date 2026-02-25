@@ -54,7 +54,7 @@ export default function ChatPage() {
   const activeFriendObj = friends.find((f) => f.id === activeFriend);
 
   return (
-    <PageWrapper emoji="💬" title="Chatten" color="bg-purple-50">
+    <PageWrapper emoji="💬" title="Chatten" color="bg-purple-50 dark:bg-slate-900" backHref="/">
       {friends.length === 0 ? (
         /* Noch keine Freunde */
         <KidsCard className="text-center py-8">
