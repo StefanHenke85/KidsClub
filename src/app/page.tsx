@@ -1,101 +1,90 @@
-import Image from "next/image";
+import Link from "next/link";
+import MascotBubble from "@/components/layout/MascotBubble";
 
-export default function Home() {
+const FEATURES = [
+  {
+    href: "/suche",
+    emoji: "🔍",
+    label: "Suchen",
+    sub: "Sicher im Internet",
+    bg: "bg-kidsYellow dark:bg-yellow-700",
+    shadow: "shadow-[0_7px_0_#c9a800] dark:shadow-[0_7px_0_#854d0e]",
+  },
+  {
+    href: "/hausaufgaben",
+    emoji: "✏️",
+    label: "Hausaufgaben",
+    sub: "Kiko hilft dir!",
+    bg: "bg-kidsBlue dark:bg-blue-700",
+    shadow: "shadow-[0_7px_0_#3a9fc9] dark:shadow-[0_7px_0_#1d4ed8]",
+  },
+  {
+    href: "/spiele",
+    emoji: "🎮",
+    label: "Spielen",
+    sub: "Mathe, Deutsch & mehr",
+    bg: "bg-kidsGreen dark:bg-emerald-700",
+    shadow: "shadow-[0_7px_0_#2daa7a] dark:shadow-[0_7px_0_#065f46]",
+  },
+  {
+    href: "/chat",
+    emoji: "💬",
+    label: "Chatten",
+    sub: "Mit meinen Freunden",
+    bg: "bg-kidsPurple dark:bg-purple-700",
+    shadow: "shadow-[0_7px_0_#8b36d4] dark:shadow-[0_7px_0_#581c87]",
+  },
+];
+
+export default function HomePage() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <main className="min-h-screen bg-kidsBg dark:bg-slate-900 font-kids pb-24 transition-colors duration-300">
+      {/* Header */}
+      <header className="px-5 pt-14 pb-4">
+        <div className="flex items-center gap-3">
+          <span className="text-5xl animate-float">🦊</span>
+          <div>
+            <h1 className="text-kids-xl font-black text-gray-800 dark:text-gray-100 leading-tight">
+              KidsClub
+            </h1>
+            <p className="text-kids-sm text-gray-500 dark:text-gray-400 font-semibold">
+              Dein sicherer Bereich!
+            </p>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      </header>
+
+      {/* 2×2 Feature Grid */}
+      <section className="px-4 grid grid-cols-2 gap-4 max-w-lg mx-auto">
+        {FEATURES.map(({ href, emoji, label, sub, bg, shadow }) => (
+          <Link
+            key={href}
+            href={href}
+            className={`
+              ${bg} ${shadow}
+              rounded-kids-lg p-5 flex flex-col items-center justify-center gap-2
+              text-center active:translate-y-1 transition-all duration-150
+              min-h-[150px] select-none
+            `}
+          >
+            <span className="text-5xl">{emoji}</span>
+            <span className="text-kids-md font-black text-gray-800 dark:text-white">{label}</span>
+            <span className="text-xs font-semibold text-gray-700 dark:text-gray-200">{sub}</span>
+          </Link>
+        ))}
+      </section>
+
+      {/* Eltern-Link */}
+      <div className="mt-8 text-center">
+        <Link
+          href="/eltern"
+          className="text-sm text-gray-400 dark:text-gray-500 font-semibold underline underline-offset-2"
         >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+          🔒 Elternbereich
+        </Link>
+      </div>
+
+      <MascotBubble message="Hallo! Was möchtest du heute machen? 😊" />
+    </main>
   );
 }
