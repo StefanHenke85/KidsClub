@@ -65,3 +65,51 @@ export interface ChatMessage {
   role: "user" | "assistant";
   content: string;
 }
+
+// Auth
+export type GradeLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13;
+
+export interface ChildProfile {
+  id: string;
+  parentId: string;
+  name: string;
+  age?: number;
+  grade: GradeLevel;
+  loginCode: string;
+  avatarEmoji: string;
+  dailyLimitMinutes: number;
+  createdAt: string;
+}
+
+export interface ChildProgress {
+  childId: string;
+  xpTotal: number;
+  level: number;
+  streakDays: number;
+  lastActiveDate: string | null;
+}
+
+export interface BadgeEarned {
+  badgeId: string;
+  earnedAt: string;
+}
+
+export interface XpRewardResult {
+  xpEarned: number;
+  newTotal: number;
+  newLevel: number;
+  leveledUp: boolean;
+  newBadges: BadgeEarned[];
+}
+
+export interface DashboardData {
+  child: ChildProfile;
+  progress: ChildProgress;
+  badges: BadgeEarned[];
+  todayMinutes: number;
+  weekSessions: {
+    day: string;
+    xp: number;
+    games: number;
+  }[];
+}

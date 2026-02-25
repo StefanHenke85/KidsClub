@@ -1,5 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import MascotBubble from "@/components/layout/MascotBubble";
+import { useChildSessionStore } from "@/store/useChildSessionStore";
+import XpBar from "@/components/progress/XpBar";
 
 const FEATURES = [
   {
@@ -37,21 +41,39 @@ const FEATURES = [
 ];
 
 export default function HomePage() {
+  const { session } = useChildSessionStore();
+
   return (
     <main className="min-h-screen bg-kidsBg dark:bg-slate-900 font-kids pb-24 transition-colors duration-300">
       {/* Header */}
       <header className="px-5 pt-14 pb-4">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 mb-3">
           <span className="text-5xl animate-float">🦊</span>
           <div>
             <h1 className="text-kids-xl font-black text-gray-800 dark:text-gray-100 leading-tight">
-              KidsClub
+              {session ? `Hallo, ${session.name}!` : "KidsClub"}
             </h1>
             <p className="text-kids-sm text-gray-500 dark:text-gray-400 font-semibold">
-              Dein sicherer Bereich!
+              {session ? `Klasse ${session.grade} · Dein sicherer Bereich!` : "Dein sicherer Bereich!"}
             </p>
           </div>
+          {session && (
+            <div className="ml-auto text-right">
+              <p className="text-xs text-gray-400 dark:text-gray-500">Klasse {session.grade}</p>
+            </div>
+          )}
         </div>
+        {session && (
+          <XpBar xpTotal={session.xpTotal} level={session.level} compact />
+        )}
+        {!session && (
+          <Link
+            href="/login/kind"
+            className="inline-flex items-center gap-2 bg-kidsGreen/10 dark:bg-green-900/20 border border-kidsGreen/30 rounded-kids px-3 py-2 text-xs font-bold text-kidsGreen dark:text-green-400"
+          >
+            🔑 Anmelden für XP & Badges
+          </Link>
+        )}
       </header>
 
       {/* 2×2 Feature Grid */}
@@ -75,7 +97,19 @@ export default function HomePage() {
       </section>
 
       {/* Eltern-Link */}
-      <div className="mt-8 text-center">
+      <div className="mt-8 text-center flex flex-col gap-2">
+        {session && (
+          <button
+            type="button"
+            onClick={async () => {
+              await fetch("/api/auth/kind-logout", { method: "POST" });
+              useChildSessionStore.getState().setSession(null);
+            }}
+            className="text-xs text-gray-400 dark:text-gray-500"
+          >
+            🚪 Abmelden
+          </button>
+        )}
         <Link
           href="/eltern"
           className="text-sm text-gray-400 dark:text-gray-500 font-semibold underline underline-offset-2"
@@ -84,7 +118,7 @@ export default function HomePage() {
         </Link>
       </div>
 
-      <MascotBubble message="Hallo! Was möchtest du heute machen? 😊" />
+      <MascotBubble message={session ? `Super! Weiter so, ${session.name}! 🌟` : "Hallo! Was möchtest du heute machen? 😊"} />
     </main>
   );
 }

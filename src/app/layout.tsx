@@ -3,6 +3,7 @@ import { Nunito } from "next/font/google";
 import "./globals.css";
 import KidsNavbar from "@/components/layout/KidsNavbar";
 import ThemeToggle from "@/components/layout/ThemeToggle";
+import ScreenTimeTimer from "@/components/timer/ScreenTimeTimer";
 import Providers from "./providers";
 
 const nunito = Nunito({
@@ -32,7 +33,9 @@ export default function RootLayout({
       <body className="font-kids bg-kidsBg dark:bg-slate-900 antialiased transition-colors duration-300">
         <Providers>
           <ThemeToggle />
-          {children}
+          <ScreenTimeTimer>
+            {children}
+          </ScreenTimeTimer>
           <KidsNavbar />
         </Providers>
       </body>
