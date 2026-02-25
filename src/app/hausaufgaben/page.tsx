@@ -53,7 +53,7 @@ export default function HausaufgabenPage() {
     if (!res.ok) {
       const errData = await res.json().catch(() => ({ error: "Unbekannter Fehler" }));
       if (res.status === 503) {
-        setApiError("⚠️ Kein API-Key konfiguriert! Bitte ANTHROPIC_API_KEY in .env.local eintragen und Server neu starten.");
+        setApiError("⚠️ Kein API-Key konfiguriert! Bitte GEMINI_API_KEY in .env.local eintragen und Server neu starten.");
       } else {
         setApiError(errData.error ?? "Serverfehler");
       }

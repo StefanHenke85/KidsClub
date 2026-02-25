@@ -31,7 +31,6 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    // Verlauf ohne letzte Nachricht als History
     const history = messages.slice(0, -1).map((m) => ({
       role: m.role === "assistant" ? "model" : "user",
       parts: [{ text: m.content }],
@@ -40,25 +39,10 @@ export async function POST(req: NextRequest) {
     const lastMessage = messages[messages.length - 1].content;
 
     const chat = model.startChat({ history });
-    const result = await chat.sendMessageStream(lastMessage);
+    const result = await chat.sendMessage(lastMessage);
+    const text = result.response.text();
 
-    const encoder = new TextEncoder();
-    const readable = new ReadableStream({
-      async start(controller) {
-        try {
-          for await (const chunk of result.stream) {
-            const text = chunk.text();
-            if (text) {
-              controller.enqueue(encoder.encode(text));
-            }
-          }
-        } finally {
-          controller.close();
-        }
-      },
-    });
-
-    return new NextResponse(readable, {
+    return new NextResponse(text, {
       headers: { "Content-Type": "text/plain; charset=utf-8" },
     });
   } catch (err) {
