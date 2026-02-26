@@ -1,36 +1,107 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# KidsClub 🎓
 
-## Getting Started
+Eine kindgerechte Lernplattform für Grundschüler und Schüler bis Klasse 13 – mit Hausaufgaben-Hilfe, Lernspielen, Freundschaftssystem und Elternbereich.
 
-First, run the development server:
+🌐 **Live:** [kidsclub-app.vercel.app](https://kidsclub-app.vercel.app)
+
+---
+
+## Features
+
+### Für Kinder
+- **Dashboard** – persönliche Begrüßung mit Maskottchen, XP & Level-System
+- **Hausaufgaben-Hilfe** – KI-gestützte Hilfe, angepasst ans Bundesland & Klassenstufe
+- **Lernspiele** – Mathe, Deutsch & Logik (Klassen 1–13, XP-Belohnungen)
+- **Freunde & Chat** – sicheres Freundschaftssystem mit elterlicher Genehmigung
+- **Kindersichere Suche** – über fragFINN
+- **Maskottchen** – 11 wählbare Tiere mit eigenem Namen (Fuchs, Bär, Eule u.v.m.)
+
+### Für Eltern
+- **Elternbereich** – PIN-geschützt, Übersicht über alle Kinder
+- **Kinder verwalten** – anlegen, bearbeiten (Klasse, Maskottchen, Bundesland, Zeitlimit)
+- **Freunde genehmigen** – Freundschaftsanfragen per Code bestätigen oder ablehnen
+- **Fortschritt einsehen** – XP, Level, Aktivitäten
+- **Tägliches Zeitlimit** – einstellbar pro Kind (15–180 Minuten)
+
+### Bundesland-Anpassung
+Kiko (der KI-Assistent) berücksichtigt den jeweiligen Lehrplan des Bundeslandes – alle 16 Bundesländer werden unterstützt.
+
+---
+
+## Tech-Stack
+
+| Bereich | Technologie |
+|---|---|
+| Framework | Next.js 14 (App Router) |
+| Sprache | TypeScript |
+| Styling | Tailwind CSS |
+| Datenbank | Turso (SQLite, HTTP REST) |
+| Auth | jose (JWT), bcryptjs |
+| KI | Groq API (Llama 3.1 8B) |
+| State | Zustand, TanStack Query |
+| Deployment | Vercel |
+
+---
+
+## Lokale Entwicklung
 
 ```bash
+# Abhängigkeiten installieren
+npm install
+
+# Entwicklungsserver starten
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Öffne [http://localhost:3000](http://localhost:3000) im Browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Umgebungsvariablen
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Erstelle eine `.env.local` Datei:
 
-## Learn More
+```env
+TURSO_DATABASE_URL=
+TURSO_AUTH_TOKEN=
+JWT_SECRET=
+GROQ_API_KEY=
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Projektstruktur
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+src/
+├── app/                  # Next.js App Router Pages & API Routes
+│   ├── api/              # Backend API Routes
+│   ├── eltern/           # Elternbereich
+│   ├── spiele/           # Lernspiele
+│   ├── hausaufgaben/     # Hausaufgaben-Hilfe
+│   └── chat/             # Freundschafts-Chat
+├── components/           # Wiederverwendbare Komponenten
+├── lib/                  # Hilfsfunktionen, DB-Client, Auth
+├── store/                # Zustand Stores
+└── types/                # TypeScript Typen
+```
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Datenschutz & Impressum
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Dieses Projekt richtet sich an Kinder und Eltern in Deutschland.
+Alle Informationen unter: [kidsclub-app.vercel.app/impressum](https://kidsclub-app.vercel.app/impressum) & [kidsclub-app.vercel.app/datenschutz](https://kidsclub-app.vercel.app/datenschutz)
+
+---
+
+## Mitmachen
+
+Das Projekt wird aktiv weiterentwickelt. Verbesserungsvorschläge und Feedback sind sehr willkommen!
+
+- Issues öffnen: [github.com/StefanHenke85/KidsClub/issues](https://github.com/StefanHenke85/KidsClub/issues)
+- Kontakt: henke.stefan1985@gmail.com
+
+---
+
+## Lizenz
+
+Privates Projekt – alle Rechte vorbehalten. © Stefan Henke

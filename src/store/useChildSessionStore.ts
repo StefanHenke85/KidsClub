@@ -11,6 +11,9 @@ interface ChildSession {
   parentId: string;
   xpTotal: number;
   level: number;
+  mascotAnimal: string;
+  mascotName: string;
+  bundesland: string;
 }
 
 interface ChildSessionStore {

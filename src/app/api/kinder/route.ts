@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDb } from "@/lib/db/turso";
 import { verifyParentSession } from "@/lib/auth/parentSession";
 import { randomUUID } from "crypto";
+import { generateFriendCode } from "@/lib/friendCode";
 
 async function getParentId(req: NextRequest): Promise<string | null> {
   const token = req.cookies.get("parent_session")?.value;
@@ -17,7 +18,8 @@ export async function GET(req: NextRequest) {
 
   const db = getDb();
   const result = await db.execute({
-    sql: `SELECT c.id, c.name, c.age, c.grade, c.login_code, c.avatar_emoji, c.daily_limit_minutes,
+    sql: `SELECT c.id, c.name, c.age, c.grade, c.login_code, c.avatar_emoji,
+                 c.mascot_animal, c.mascot_name, c.daily_limit_minutes, c.friend_code, c.bundesland,
                  cp.xp_total, cp.level, cp.streak_days, cp.last_active_date
           FROM children c
           LEFT JOIN child_progress cp ON cp.child_id = c.id
@@ -34,7 +36,7 @@ export async function POST(req: NextRequest) {
   const parentId = await getParentId(req);
   if (!parentId) return NextResponse.json({ error: "Nicht angemeldet" }, { status: 401 });
 
-  const { name, age, grade, loginCode, avatarEmoji, dailyLimitMinutes } = await req.json();
+  const { name, age, grade, loginCode, avatarEmoji, mascotAnimal, mascotName, dailyLimitMinutes, bundesland } = await req.json();
 
   if (!name || !grade || !loginCode || loginCode.length !== 4 || !/^\d{4}$/.test(loginCode)) {
     return NextResponse.json({ error: "Name, Klasse und 4-stelliger Zahlencode nötig" }, { status: 400 });
@@ -52,10 +54,11 @@ export async function POST(req: NextRequest) {
   }
 
   const id = randomUUID();
+  const friendCode = generateFriendCode();
   await db.execute({
-    sql: `INSERT INTO children (id, parent_id, name, age, grade, login_code, avatar_emoji, daily_limit_minutes)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-    args: [id, parentId, name.trim(), age ?? null, grade, loginCode, avatarEmoji ?? "🦊", dailyLimitMinutes ?? 60],
+    sql: `INSERT INTO children (id, parent_id, name, age, grade, login_code, avatar_emoji, mascot_animal, mascot_name, daily_limit_minutes, friend_code, bundesland)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    args: [id, parentId, name.trim(), age ?? null, grade, loginCode, avatarEmoji ?? "🦊", mascotAnimal ?? "fuchs", mascotName ?? "Kiko", dailyLimitMinutes ?? 60, friendCode, bundesland ?? "NRW"],
   });
 
   // Init progress

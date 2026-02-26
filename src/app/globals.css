@@ -3,13 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --background: #FFF8F0;
-  --foreground: #1a1a2e;
+  --background: #EDE8FF;
+  --foreground: #2d1b6e;
 }
 
 .dark {
-  --background: #0f172a;
-  --foreground: #e2e8f0;
+  --background: #0f0c1a;
+  --foreground: #e8e0ff;
 }
 
 * {
@@ -24,6 +24,22 @@ body {
   -webkit-user-select: none;
   user-select: none;
   transition: background-color 0.3s, color 0.3s;
+  /* Mehrschichtiger blob-artiger Hintergrund */
+  background-image:
+    radial-gradient(ellipse 60% 45% at 10% 15%, rgba(196,165,253,0.35) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 90% 20%, rgba(116,194,225,0.28) 0%, transparent 65%),
+    radial-gradient(ellipse 55% 50% at 80% 85%, rgba(107,197,160,0.22) 0%, transparent 65%),
+    radial-gradient(ellipse 45% 40% at 20% 80%, rgba(255,209,102,0.20) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 70% at 50% 50%, rgba(244,149,106,0.08) 0%, transparent 80%);
+}
+
+.dark body,
+.dark {
+  background-image:
+    radial-gradient(ellipse 60% 45% at 10% 15%, rgba(109,40,217,0.25) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 90% 20%, rgba(30,64,175,0.20) 0%, transparent 65%),
+    radial-gradient(ellipse 55% 50% at 80% 85%, rgba(6,95,70,0.18) 0%, transparent 65%),
+    radial-gradient(ellipse 45% 40% at 20% 80%, rgba(146,64,14,0.15) 0%, transparent 60%);
 }
 
 /* Scrollbar kindgerecht */
@@ -31,18 +47,18 @@ body {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #f0f0f0;
+  background: #ddd6ff;
   border-radius: 10px;
 }
 .dark ::-webkit-scrollbar-track {
-  background: #1e293b;
+  background: #1e0a3c;
 }
 ::-webkit-scrollbar-thumb {
-  background: #C084FC;
+  background: linear-gradient(to bottom, #A78BFA, #74C2E1);
   border-radius: 10px;
 }
 .dark ::-webkit-scrollbar-thumb {
-  background: #7c3aed;
+  background: linear-gradient(to bottom, #7c3aed, #0369a1);
 }
 
 button {
@@ -56,14 +72,186 @@ input, textarea {
   user-select: text;
 }
 
+/* =====================
+   HERO GRADIENT (Startseite)
+   ===================== */
+.hero-gradient {
+  background: linear-gradient(135deg,
+    #b794f4 0%,
+    #7ec8e3 30%,
+    #6bc5a0 60%,
+    #ffd166 100%
+  );
+  position: relative;
+}
+
+/* Punktmuster im Hero */
+.hero-gradient::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.25) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+}
+
+/* =====================
+   WELLENFORM unten
+   ===================== */
+.wave-divider {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  line-height: 0;
+}
+.wave-divider svg {
+  display: block;
+  width: 100%;
+  height: 40px;
+}
+
+/* =====================
+   KARTEN-STYLES
+   ===================== */
+.card-kids {
+  background: rgba(255, 255, 255, 0.82);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 2px solid rgba(167, 139, 250, 0.18);
+  box-shadow:
+    0 6px 0 rgba(167, 139, 250, 0.18),
+    0 12px 32px rgba(167, 139, 250, 0.12);
+  border-radius: 1.5rem;
+}
+.dark .card-kids {
+  background: rgba(30, 15, 60, 0.82);
+  border: 2px solid rgba(167, 139, 250, 0.22);
+}
+
+/* Soft-Karte (weniger prominent) */
+.card-soft {
+  background: rgba(255, 255, 255, 0.75);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(167, 139, 250, 0.15);
+  box-shadow: 0 4px 20px rgba(167, 139, 250, 0.10), 0 2px 6px rgba(0,0,0,0.04);
+}
+.dark .card-soft {
+  background: rgba(30, 15, 60, 0.75);
+  border: 1.5px solid rgba(167, 139, 250, 0.20);
+}
+
+/* =====================
+   SHADOWS & GLOW
+   ===================== */
+.kids-shadow {
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.08);
+}
+.kids-shadow-hover {
+  box-shadow: 0 9px 0 rgba(0, 0, 0, 0.10);
+}
+.glow-purple {
+  box-shadow: 0 0 20px rgba(167, 139, 250, 0.5), 0 0 40px rgba(167, 139, 250, 0.2);
+}
+.glow-blue {
+  box-shadow: 0 0 20px rgba(116, 194, 225, 0.5), 0 0 40px rgba(116, 194, 225, 0.2);
+}
+.glow-yellow {
+  box-shadow: 0 0 20px rgba(255, 209, 102, 0.5), 0 0 40px rgba(255, 209, 102, 0.2);
+}
+.glow-green {
+  box-shadow: 0 0 20px rgba(107, 197, 160, 0.5), 0 0 40px rgba(107, 197, 160, 0.2);
+}
+
+/* =====================
+   BLOB-FORM (organisch)
+   ===================== */
+.blob {
+  border-radius: 60% 40% 55% 45% / 50% 55% 45% 50%;
+  animation: blob-morph 8s ease-in-out infinite;
+}
+
+/* =====================
+   NAV BADGE DOTS
+   ===================== */
+.nav-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  background: #F48FB1;
+  border-radius: 50%;
+  border: 2px solid white;
+  animation: pulse-badge 2s ease-in-out infinite;
+}
+
+/* =====================
+   SHIMMER (Button-Effekt)
+   ===================== */
+.shimmer-bg {
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+/* =====================
+   STICKER-EFFEKT für Emojis
+   ===================== */
+.sticker {
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15)) drop-shadow(0 0 1px rgba(255,255,255,0.8));
+}
+
+/* =====================
+   DOT-PATTERN Hintergrund
+   ===================== */
+.dots-bg {
+  background-image: radial-gradient(circle, rgba(167,139,250,0.15) 1.5px, transparent 1.5px);
+  background-size: 20px 20px;
+}
+
+/* =====================
+   STARS Dekor
+   ===================== */
+.stars-bg {
+  position: relative;
+  overflow: hidden;
+}
+.stars-bg::after {
+  content: '✦ ✧ ⭐ ✦ ✧ ⭐';
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  font-size: 10px;
+  color: rgba(167,139,250,0.3);
+  letter-spacing: 8px;
+  pointer-events: none;
+}
+
+/* =====================
+   KEYFRAMES
+   ===================== */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+@keyframes blob-morph {
+  0%, 100% { border-radius: 60% 40% 55% 45% / 50% 55% 45% 50%; }
+  25%       { border-radius: 40% 60% 45% 55% / 55% 45% 55% 45%; }
+  50%       { border-radius: 50% 50% 60% 40% / 40% 60% 40% 60%; }
+  75%       { border-radius: 45% 55% 40% 60% / 60% 40% 60% 40%; }
+}
+
+@keyframes pulse-badge {
+  0%, 100% { transform: scale(1);   opacity: 1; }
+  50%       { transform: scale(1.3); opacity: 0.8; }
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
-  }
-  .kids-shadow {
-    box-shadow: 0 6px 0 rgba(0, 0, 0, 0.15);
-  }
-  .kids-shadow-hover {
-    box-shadow: 0 8px 0 rgba(0, 0, 0, 0.18);
   }
 }

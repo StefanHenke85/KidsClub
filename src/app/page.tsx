@@ -4,101 +4,216 @@ import Link from "next/link";
 import MascotBubble from "@/components/layout/MascotBubble";
 import { useChildSessionStore } from "@/store/useChildSessionStore";
 import XpBar from "@/components/progress/XpBar";
+import { getMascotEmoji, getMascotGreeting } from "@/lib/mascots";
 
 const FEATURES = [
   {
     href: "/suche",
     emoji: "🔍",
-    label: "Suchen",
-    sub: "Sicher im Internet",
-    desc: "Finde Infos zu jedem Thema – kindersicher gefiltert",
-    bg: "bg-kidsYellow dark:bg-yellow-700",
-    shadow: "shadow-[0_7px_0_#c9a800] dark:shadow-[0_7px_0_#854d0e]",
+    label: "Kindersichere\nSuche",
+    sub: "Sicher surfen",
+    bg: "bg-gradient-to-br from-yellow-300 to-amber-200",
+    border: "border-yellow-400",
+    shadow: "shadow-[0_7px_0_#d97706]",
+    activeShadow: "shadow-[0_3px_0_#d97706]",
+    dot: "bg-yellow-500",
+    glow: "hover:shadow-[0_7px_0_#d97706,0_0_20px_rgba(251,191,36,0.4)]",
   },
   {
     href: "/hausaufgaben",
     emoji: "✏️",
-    label: "Hausaufgaben",
-    sub: "Kiko hilft dir!",
-    desc: "Der Fuchs Kiko erklärt dir Schritt für Schritt",
-    bg: "bg-kidsBlue dark:bg-blue-700",
-    shadow: "shadow-[0_7px_0_#3a9fc9] dark:shadow-[0_7px_0_#1d4ed8]",
+    label: "Hausaufgaben-\nHilfe",
+    sub: "KI-Lernbegleiter",
+    bg: "bg-gradient-to-br from-sky-300 to-blue-200",
+    border: "border-sky-400",
+    shadow: "shadow-[0_7px_0_#0369a1]",
+    activeShadow: "shadow-[0_3px_0_#0369a1]",
+    dot: "bg-sky-500",
+    glow: "hover:shadow-[0_7px_0_#0369a1,0_0_20px_rgba(14,165,233,0.4)]",
   },
   {
     href: "/spiele",
     emoji: "🎮",
-    label: "Spielen & Lernen",
-    sub: "XP sammeln!",
-    desc: "Mathe, Deutsch & Logik – passend zu deiner Klasse",
-    bg: "bg-kidsGreen dark:bg-emerald-700",
-    shadow: "shadow-[0_7px_0_#2daa7a] dark:shadow-[0_7px_0_#065f46]",
+    label: "Lernspiele",
+    sub: "Mathe · Deutsch · mehr",
+    bg: "bg-gradient-to-br from-emerald-300 to-green-200",
+    border: "border-emerald-400",
+    shadow: "shadow-[0_7px_0_#047857]",
+    activeShadow: "shadow-[0_3px_0_#047857]",
+    dot: "bg-emerald-500",
+    glow: "hover:shadow-[0_7px_0_#047857,0_0_20px_rgba(16,185,129,0.4)]",
   },
   {
     href: "/chat",
     emoji: "💬",
-    label: "Chatten",
-    sub: "Mit meinen Freunden",
-    desc: "Schreibe sicher mit Freunden – von Eltern genehmigt",
-    bg: "bg-kidsPurple dark:bg-purple-700",
-    shadow: "shadow-[0_7px_0_#8b36d4] dark:shadow-[0_7px_0_#581c87]",
+    label: "Freunde-Chat",
+    sub: "Sicher schreiben",
+    bg: "bg-gradient-to-br from-violet-300 to-purple-200",
+    border: "border-violet-400",
+    shadow: "shadow-[0_7px_0_#6d28d9]",
+    activeShadow: "shadow-[0_3px_0_#6d28d9]",
+    dot: "bg-violet-500",
+    glow: "hover:shadow-[0_7px_0_#6d28d9,0_0_20px_rgba(139,92,246,0.4)]",
   },
+];
+
+// Schwebende Deko-Elemente rund um den Hero
+const DECO = [
+  { emoji: "⭐", pos: "top-4 left-3",     anim: "animate-twinkle",    size: "text-2xl" },
+  { emoji: "✨", pos: "top-8 right-4",    anim: "animate-sparkle",    size: "text-xl"  },
+  { emoji: "🌟", pos: "top-3 left-1/3",  anim: "animate-float-slow", size: "text-lg"  },
+  { emoji: "⭐", pos: "bottom-6 right-5", anim: "animate-twinkle",    size: "text-xl"  },
+  { emoji: "✦",  pos: "bottom-10 left-6", anim: "animate-sparkle",    size: "text-base opacity-60" },
+  { emoji: "🎈", pos: "top-6 right-1/4", anim: "animate-float",      size: "text-xl"  },
 ];
 
 export default function HomePage() {
   const { session } = useChildSessionStore();
+  const mascotEmoji = session ? getMascotEmoji(session.mascotAnimal) : "🦊";
+  const mascotMsg = session
+    ? getMascotGreeting(session.mascotName, session.name, session.mascotAnimal)
+    : "Hallo! Ich bin Kiko. Ich helfe dir beim Lernen! 😊";
 
   return (
-    <main className="min-h-screen bg-kidsBg dark:bg-slate-900 font-kids pb-24 transition-colors duration-300">
-      {/* Header */}
-      <header className="px-5 pt-14 pb-4">
-        <div className="flex items-center gap-3 mb-3">
-          <span className="text-5xl animate-float">🦊</span>
-          <div>
-            <h1 className="text-kids-xl font-black text-gray-800 dark:text-gray-100 leading-tight">
-              {session ? `Hallo, ${session.name}! 👋` : "KidsClub"}
-            </h1>
-            <p className="text-kids-sm text-gray-500 dark:text-gray-400 font-semibold">
-              {session ? `Klasse ${session.grade} · Dein sicherer Bereich!` : "Lernen macht Spaß!"}
-            </p>
-          </div>
-        </div>
-        {session ? (
-          <XpBar xpTotal={session.xpTotal} level={session.level} compact />
-        ) : (
-          <Link
-            href="/login/kind"
-            className="inline-flex items-center gap-2 bg-kidsGreen/10 dark:bg-green-900/20 border-2 border-kidsGreen/40 rounded-kids px-4 py-2 text-kids-sm font-black text-kidsGreen dark:text-green-400"
+    <main className="min-h-screen font-kids pb-32 transition-colors duration-300">
+
+      {/* ── Hero-Header ── */}
+      <header className="relative overflow-hidden hero-gradient px-4 pt-10 pb-16">
+        {/* Dekorative schwebende Elemente */}
+        {DECO.map((d, i) => (
+          <span
+            key={i}
+            className={`absolute pointer-events-none select-none ${d.pos} ${d.anim} ${d.size}`}
           >
-            🔑 Anmelden für XP &amp; Badges
-          </Link>
-        )}
+            {d.emoji}
+          </span>
+        ))}
+
+        {/* Wellen-Trennlinie */}
+        <div className="absolute bottom-0 left-0 right-0 overflow-hidden leading-none">
+          <svg
+            viewBox="0 0 1200 56"
+            preserveAspectRatio="none"
+            className="w-full h-12 fill-[#EDE8FF] dark:fill-[#0f0c1a]"
+          >
+            <path d="M0,28 C150,56 350,0 600,28 C850,56 1050,0 1200,28 L1200,56 L0,56 Z" />
+          </svg>
+        </div>
+
+        <div className="max-w-lg mx-auto relative z-10">
+          {session ? (
+            /* ── Eingeloggt ── */
+            <div className="flex items-center gap-4 mb-5">
+              <span className="text-7xl animate-float drop-shadow-lg sticker leading-none">
+                {mascotEmoji}
+              </span>
+              <div>
+                <h1 className="text-kids-xl font-black text-white drop-shadow-md leading-tight">
+                  Hallo, {session.name}! 👋
+                </h1>
+                <p className="text-sm text-white/85 font-semibold mt-0.5">
+                  {session.mascotName} ist dabei · Klasse {session.grade}
+                </p>
+              </div>
+            </div>
+          ) : (
+            /* ── Nicht eingeloggt ── */
+            <div className="text-center mb-5">
+              <div className="text-9xl mb-3 animate-float drop-shadow-xl leading-none sticker">🦊</div>
+              <h1 className="text-4xl font-black text-white mb-1 drop-shadow-md">KidsClub</h1>
+              <p className="text-white/95 font-black text-xl">Deine sichere Lernwelt</p>
+              <p className="text-white/75 text-sm mt-1 font-semibold">Klasse 1–13 · elternüberwacht · 100% sicher</p>
+            </div>
+          )}
+
+          {session ? (
+            <XpBar xpTotal={session.xpTotal} level={session.level} compact />
+          ) : (
+            <div className="flex flex-col gap-3 mt-5 max-w-sm mx-auto">
+              <Link
+                href="/login/kind"
+                className="bg-white text-kidsPurple rounded-kids py-4 text-kids-sm font-black text-center shadow-[0_6px_0_rgba(109,40,217,0.3)] active:translate-y-1 active:shadow-[0_2px_0_rgba(109,40,217,0.3)] transition-all hover:brightness-105"
+              >
+                🔑 Als Kind anmelden
+              </Link>
+              <Link
+                href="/login"
+                className="bg-white/30 text-white rounded-kids py-3 text-sm font-bold text-center border-2 border-white/50 active:translate-y-1 transition-all hover:bg-white/40"
+              >
+                👪 Eltern-Bereich & Registrierung
+              </Link>
+            </div>
+          )}
+        </div>
       </header>
 
-      {/* Feature Cards */}
-      <section className="px-4 flex flex-col gap-3 max-w-lg mx-auto">
-        {FEATURES.map(({ href, emoji, label, sub, desc, bg, shadow }) => (
-          <Link
-            key={href}
-            href={href}
-            className={`
-              ${bg} ${shadow}
-              rounded-kids-lg px-5 py-4 flex items-center gap-4
-              active:translate-y-1 transition-all duration-150 select-none
-            `}
-          >
-            <span className="text-5xl flex-shrink-0">{emoji}</span>
-            <div className="flex-1 min-w-0">
-              <p className="text-kids-md font-black text-gray-800 dark:text-white leading-tight">{label}</p>
-              <p className="text-xs font-bold text-gray-700 dark:text-gray-200">{sub}</p>
-              <p className="text-xs text-gray-600 dark:text-gray-300 mt-0.5 leading-snug">{desc}</p>
-            </div>
-            <span className="text-3xl text-gray-700 dark:text-gray-300 flex-shrink-0">›</span>
-          </Link>
-        ))}
+      {/* ── Stats-Chips (nur ausgeloggt) ── */}
+      {!session && (
+        <div className="px-4 py-5 max-w-lg mx-auto">
+          <div className="flex gap-2 flex-wrap justify-center">
+            {[
+              { emoji: "📚", text: "5 Fächer" },
+              { emoji: "🏫", text: "13 Klassen" },
+              { emoji: "🏆", text: "15 Abzeichen" },
+              { emoji: "🔒", text: "100% sicher" },
+            ].map((s) => (
+              <div
+                key={s.text}
+                className="flex items-center gap-1.5 bg-white dark:bg-slate-800 rounded-full px-4 py-2 text-sm font-bold text-gray-600 dark:text-gray-300 shadow-md border-2 border-purple-100 dark:border-slate-700"
+              >
+                <span className="text-base">{s.emoji}</span>
+                <span>{s.text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Feature-Kacheln ── */}
+      <section className="px-4 pt-2 pb-4 max-w-lg mx-auto w-full">
+        <h2 className="text-kids-sm font-black text-gray-500 dark:text-gray-400 mb-4 uppercase tracking-widest text-center">
+          {session ? "Was machst du heute? 🚀" : "Was kann KidsClub?"}
+        </h2>
+
+        <div className="grid grid-cols-2 gap-4 sm:gap-5">
+          {FEATURES.map(({ href, emoji, label, sub, bg, border, shadow, glow, dot }) => (
+            <Link
+              key={href}
+              href={href}
+              className={`
+                ${bg} ${shadow} ${glow}
+                border-2 ${border}
+                rounded-kids-xl
+                px-3 py-5 sm:px-5 sm:py-6
+                flex flex-col items-center text-center gap-3
+                active:translate-y-1 transition-all duration-150
+                hover:scale-[1.03]
+              `}
+            >
+              <span className="text-5xl sm:text-6xl animate-float leading-none sticker">
+                {emoji}
+              </span>
+              <div>
+                <p className="text-sm sm:text-base font-black text-gray-700 leading-tight whitespace-pre-line">
+                  {label}
+                </p>
+                <p className="text-xs text-gray-500 mt-1 leading-tight font-semibold">{sub}</p>
+              </div>
+              <span className={`w-3 h-3 rounded-full ${dot} opacity-80 shadow-sm`} />
+            </Link>
+          ))}
+        </div>
       </section>
 
-      {/* Eltern / Abmelden */}
-      <div className="mt-8 text-center flex flex-col gap-2">
+      {/* ── Dekorativer Trennstrich ── */}
+      <div className="max-w-lg mx-auto px-4 my-4 flex items-center gap-3 opacity-40">
+        <div className="flex-1 h-px bg-gradient-to-r from-transparent via-purple-300 to-transparent" />
+        <span className="text-lg">✦</span>
+        <div className="flex-1 h-px bg-gradient-to-r from-transparent via-purple-300 to-transparent" />
+      </div>
+
+      {/* ── Footer-Links ── */}
+      <div className="text-center flex flex-col gap-2 px-4 pb-2">
         {session && (
           <button
             type="button"
@@ -106,24 +221,29 @@ export default function HomePage() {
               await fetch("/api/auth/kind-logout", { method: "POST" });
               useChildSessionStore.getState().setSession(null);
             }}
-            className="text-xs text-gray-400 dark:text-gray-500 underline"
+            className="text-xs text-gray-400 dark:text-gray-500 underline underline-offset-2 hover:text-gray-600 transition-colors"
           >
-            🚪 Abmelden
+            🚪 Abmelden ({session.name})
           </button>
         )}
         <Link
           href="/eltern"
-          className="text-sm text-gray-400 dark:text-gray-500 font-semibold underline underline-offset-2"
+          className="text-sm text-gray-400 dark:text-gray-500 font-semibold underline underline-offset-2 hover:text-gray-600 transition-colors"
         >
           🔒 Elternbereich
         </Link>
+        <div className="flex justify-center gap-4 mt-1">
+          <Link href="/impressum" className="text-xs text-gray-400 dark:text-gray-500 underline underline-offset-2 hover:text-gray-600 transition-colors">
+            Impressum
+          </Link>
+          <span className="text-xs text-gray-300 dark:text-gray-600">·</span>
+          <Link href="/datenschutz" className="text-xs text-gray-400 dark:text-gray-500 underline underline-offset-2 hover:text-gray-600 transition-colors">
+            Datenschutz
+          </Link>
+        </div>
       </div>
 
-      <MascotBubble
-        message={session
-          ? `Super! Weiter so, ${session.name}! 🌟`
-          : "Hallo! Ich bin Kiko. Womit kann ich helfen? 😊"}
-      />
+      <MascotBubble message={mascotMsg} emoji={mascotEmoji} />
     </main>
   );
 }

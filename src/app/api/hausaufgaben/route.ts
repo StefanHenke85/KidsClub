@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import { KIKO_SYSTEM_PROMPT } from "@/lib/claude";
-import type { ChatMessage } from "@/types";
+import { getKikoSystemPrompt } from "@/lib/claude";
+import { verifyChildSession } from "@/lib/auth/childSession";
+import type { HomeworkMessage as ChatMessage } from "@/types";
 
 export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
+  // Bundesland aus child_session holen
+  const token = req.cookies.get("child_session")?.value;
+  const session = token ? await verifyChildSession(token) : null;
+  const systemPrompt = getKikoSystemPrompt(session?.bundesland);
+
   const { messages }: { messages: ChatMessage[] } = await req.json();
 
   if (!messages || messages.length === 0) {
@@ -31,7 +37,7 @@ export async function POST(req: NextRequest) {
         max_tokens: 300,
         temperature: 0.3,
         messages: [
-          { role: "system", content: KIKO_SYSTEM_PROMPT },
+          { role: "system", content: systemPrompt },
           ...messages.map((m) => ({ role: m.role, content: m.content })),
         ],
       }),

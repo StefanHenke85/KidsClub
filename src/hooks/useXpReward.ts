@@ -5,7 +5,7 @@ import { useChildSessionStore } from "@/store/useChildSessionStore";
 import type { Difficulty, XpRewardResult } from "@/types";
 
 interface GameCompleteParams {
-  game: "mathe" | "deutsch" | "logik";
+  game: "mathe" | "deutsch" | "logik" | "englisch" | "sachkunde";
   difficulty: Difficulty;
   correct: number;
   total: number;

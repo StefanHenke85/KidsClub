@@ -8,12 +8,13 @@ export default function LoginPage() {
   const [mode, setMode] = useState<"login" | "register">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [pin, setPin] = useState("");
   const { login, register, loading, error } = useParentAuth();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (mode === "login") await login(email, password);
-    else await register(email, password);
+    else await register(email, password, pin);
   }
 
   return (
@@ -80,6 +81,27 @@ export default function LoginPage() {
                 className="w-full border-2 border-gray-200 dark:border-slate-600 rounded-kids px-4 py-3 text-kids-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:border-kidsBlue outline-none"
               />
             </div>
+
+            {mode === "register" && (
+              <div>
+                <label className="block text-kids-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
+                  Eltern-PIN (4 Ziffern) 🔒
+                </label>
+                <input
+                  type="password"
+                  inputMode="numeric"
+                  maxLength={4}
+                  value={pin}
+                  onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 4))}
+                  placeholder="z.B. 1234"
+                  required={mode === "register"}
+                  className="w-full border-2 border-gray-200 dark:border-slate-600 rounded-kids px-4 py-3 text-kids-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:border-kidsPurple outline-none font-mono tracking-widest text-center"
+                />
+                <p className="text-xs text-gray-400 mt-1">
+                  Mit dieser PIN öffnest du den Elternbereich. Merke sie dir gut!
+                </p>
+              </div>
+            )}
 
             {error && (
               <p className="text-sm text-red-500 font-semibold text-center">{error}</p>

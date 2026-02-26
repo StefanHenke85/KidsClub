@@ -14,7 +14,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
   const parentId = await getParentId(req);
   if (!parentId) return NextResponse.json({ error: "Nicht angemeldet" }, { status: 401 });
 
-  const { name, age, grade, avatarEmoji, dailyLimitMinutes } = await req.json();
+  const { name, age, grade, avatarEmoji, mascotAnimal, mascotName, dailyLimitMinutes, bundesland } = await req.json();
   const db = getDb();
 
   // Verify ownership
@@ -30,9 +30,12 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
             age = COALESCE(?, age),
             grade = COALESCE(?, grade),
             avatar_emoji = COALESCE(?, avatar_emoji),
-            daily_limit_minutes = COALESCE(?, daily_limit_minutes)
+            mascot_animal = COALESCE(?, mascot_animal),
+            mascot_name = COALESCE(?, mascot_name),
+            daily_limit_minutes = COALESCE(?, daily_limit_minutes),
+            bundesland = COALESCE(?, bundesland)
           WHERE id = ?`,
-    args: [name ?? null, age ?? null, grade ?? null, avatarEmoji ?? null, dailyLimitMinutes ?? null, params.id],
+    args: [name ?? null, age ?? null, grade ?? null, avatarEmoji ?? null, mascotAnimal ?? null, mascotName ?? null, dailyLimitMinutes ?? null, bundesland ?? null, params.id],
   });
 
   return NextResponse.json({ ok: true });

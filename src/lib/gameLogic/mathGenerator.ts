@@ -42,10 +42,15 @@ export function generateMathQuestion(difficulty: Difficulty): MathQuestion {
 
 export function generateChoices(correct: number, count = 4): number[] {
   const choices = new Set<number>([correct]);
-  while (choices.size < count) {
-    const offset = rand(-5, 5);
+  // Scale offset to the magnitude of the answer
+  const magnitude = Math.max(3, Math.ceil(Math.abs(correct) * 0.3));
+  let tries = 0;
+  while (choices.size < count && tries < 100) {
+    tries++;
+    const offset = rand(-magnitude, magnitude);
+    if (offset === 0) continue;
     const val = correct + offset;
-    if (val > 0 && val !== correct) choices.add(val);
+    if (val !== correct) choices.add(val);
   }
   return Array.from(choices).sort(() => Math.random() - 0.5);
 }

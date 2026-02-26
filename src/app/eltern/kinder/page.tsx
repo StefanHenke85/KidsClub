@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface KindRow {
   id: string;
@@ -10,6 +11,9 @@ interface KindRow {
   grade: number;
   login_code: string;
   avatar_emoji: string;
+  mascot_animal: string;
+  mascot_name: string;
+  bundesland: string;
   daily_limit_minutes: number;
   xp_total: number | null;
   level: number | null;
@@ -17,6 +21,7 @@ interface KindRow {
 }
 
 export default function KinderPage() {
+  const router = useRouter();
   const [kinder, setKinder] = useState<KindRow[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -82,6 +87,12 @@ export default function KinderPage() {
                 >
                   📊 Fortschritt
                 </Link>
+                <button
+                  onClick={() => router.push(`/eltern/kinder/${k.id}`)}
+                  className="bg-kidsYellow/20 dark:bg-yellow-900/20 text-yellow-700 dark:text-yellow-400 rounded-kids px-3 py-2 text-xs font-bold"
+                >
+                  ✏️
+                </button>
                 <button
                   onClick={() => deleteKind(k.id, k.name)}
                   className="bg-red-50 dark:bg-red-900/20 text-red-500 rounded-kids px-3 py-2 text-xs font-bold"

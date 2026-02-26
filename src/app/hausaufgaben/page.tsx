@@ -4,7 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import PageWrapper from "@/components/layout/PageWrapper";
 import KidsCard from "@/components/ui/KidsCard";
 import BigButton from "@/components/ui/BigButton";
-import type { ChatMessage } from "@/types";
+import type { HomeworkMessage as ChatMessage } from "@/types";
+import { useChildSessionStore } from "@/store/useChildSessionStore";
 
 const SUBJECTS = [
   { id: "mathe",     emoji: "🔢", label: "Mathe"      },
@@ -14,6 +15,7 @@ const SUBJECTS = [
 ];
 
 export default function HausaufgabenPage() {
+  const { session } = useChildSessionStore();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [subject, setSubject] = useState("mathe");
@@ -93,7 +95,15 @@ export default function HausaufgabenPage() {
   };
 
   return (
-    <PageWrapper emoji="✏️" title="Hausaufgaben" color="bg-blue-50 dark:bg-slate-900" backHref="/">
+    <PageWrapper emoji="✏️" title="Hausaufgaben" color="bg-blue-50 dark:bg-slate-900" backHref="/" headerGradient="from-sky-400 via-blue-300 to-indigo-300">
+      {/* Bundesland-Hinweis */}
+      {session?.bundesland && (
+        <div className="mb-3 flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-kids px-3 py-2 text-xs text-blue-600 dark:text-blue-300 font-semibold">
+          <span>🗺️</span>
+          <span>Kiko kennt den Lehrplan für <strong>{session.bundesland}</strong> – Inhalte können je nach Bundesland leicht abweichen.</span>
+        </div>
+      )}
+
       {/* API-Key Warnung */}
       {apiError && (
         <div className="mb-3 bg-red-100 dark:bg-red-900/40 border-2 border-red-300 rounded-kids px-4 py-3 text-sm font-bold text-red-700 dark:text-red-300">
@@ -140,8 +150,11 @@ export default function HausaufgabenPage() {
               className={`max-w-[80%] px-4 py-3 rounded-kids-lg text-kids-sm font-semibold leading-relaxed ${
                 m.role === "user"
                   ? "bg-kidsBlue dark:bg-blue-700 text-gray-800 dark:text-white"
-                  : "bg-white dark:bg-slate-700 border-2 border-gray-100 dark:border-slate-600 text-gray-800 dark:text-gray-100"
+                  : "bg-white dark:bg-slate-700 border-2 border-gray-100 dark:border-slate-600 text-gray-800 dark:text-gray-100 select-none"
               }`}
+              onCopy={m.role === "assistant" ? (e) => e.preventDefault() : undefined}
+              onCut={m.role === "assistant" ? (e) => e.preventDefault() : undefined}
+              onContextMenu={m.role === "assistant" ? (e) => e.preventDefault() : undefined}
             >
               {m.content || (loading && i === messages.length - 1 ? "..." : "")}
             </div>

@@ -6,7 +6,7 @@ export interface SearchResult {
   favicon?: string;
 }
 
-// Chat
+// Chat (legacy Zustand-Store, wird nicht mehr aktiv genutzt)
 export interface Friend {
   id: string;
   name: string;
@@ -22,17 +22,34 @@ export interface Message {
   timestamp: number;
 }
 
+// Freundschaftssystem (DB-backed)
 export interface FriendRequest {
   id: string;
-  name: string;
-  requestedAt: number;
+  fromChild: { id: string; name: string; avatarEmoji: string; friendCode: string };
+  toChild: { id: string; name: string; avatarEmoji: string };
+  status: "pending" | "approved" | "rejected";
+  createdAt: string;
+}
+
+export interface Friendship {
+  friendId: string;
+  friendName: string;
+  friendAvatar: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  fromChildId: string;
+  text: string;
+  createdAt: string;
+  fromMe: boolean;
 }
 
 // Games
 export type Difficulty = "leicht" | "mittel" | "schwer";
 
 export interface GameScore {
-  game: "mathe" | "deutsch" | "logik";
+  game: "mathe" | "deutsch" | "logik" | "englisch" | "sachkunde";
   score: number;
   level: number;
   date: number;
@@ -41,9 +58,11 @@ export interface GameScore {
 export interface MathQuestion {
   num1: number;
   num2: number;
-  operator: "+" | "-" | "*";
+  operator: string;
   answer: number;
 }
+
+export type GameName = "mathe" | "deutsch" | "logik" | "englisch" | "sachkunde";
 
 export interface LogikPattern {
   sequence: string[];
@@ -61,7 +80,7 @@ export interface ParentSettings {
 }
 
 // Homework
-export interface ChatMessage {
+export interface HomeworkMessage {
   role: "user" | "assistant";
   content: string;
 }

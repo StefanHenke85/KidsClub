@@ -1,14 +1,22 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { Friend, Message, FriendRequest } from "@/types";
+import type { Friend, Message } from "@/types";
+
+// Lokaler Typ für den Legacy-Store (nicht mehr aktiv genutzt)
+interface LegacyFriendRequest {
+  id: string;
+  name: string;
+  requestedAt: number;
+}
 
 interface ChatStore {
   friends: Friend[];
   messages: Message[];
-  friendRequests: FriendRequest[];
+  friendRequests: LegacyFriendRequest[];
   addFriendRequest: (name: string) => void;
   approveFriend: (id: string) => void;
   rejectFriend: (id: string) => void;
+
   sendMessage: (friendId: string, text: string, fromMe: boolean) => void;
   getMessages: (friendId: string) => Message[];
 }
@@ -33,7 +41,7 @@ export const useChatStore = create<ChatStore>()(
       approveFriend: (id) =>
         set((s) => {
           const req = s.friendRequests.find((r) => r.id === id);
-          if (!req) return s;
+          if (!req) return {};
           const color = AVATAR_COLORS[s.friends.length % AVATAR_COLORS.length];
           return {
             friendRequests: s.friendRequests.filter((r) => r.id !== id),

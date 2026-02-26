@@ -5,7 +5,7 @@ import PageWrapper from "@/components/layout/PageWrapper";
 import KidsCard from "@/components/ui/KidsCard";
 import BigButton from "@/components/ui/BigButton";
 import XpRewardPopup from "@/components/progress/XpRewardPopup";
-import { generateMathQuestion } from "@/lib/curriculum/mathByGrade";
+import { generateMathQuestion, formatQuestion } from "@/lib/curriculum/mathByGrade";
 import { generateChoices } from "@/lib/gameLogic/mathGenerator";
 import { useGameStore } from "@/store/useGameStore";
 import { useChildSessionStore } from "@/store/useChildSessionStore";
@@ -110,31 +110,23 @@ export default function MathePage() {
           </p>
           {best > 0 && <p className="text-kids-sm text-gray-400 mb-3">Dein Rekord: {best} Punkte ⭐</p>}
 
-          {/* Grade selector (only if not logged in with fixed grade) */}
-          {!session && (
-            <div className="mb-4">
-              <p className="text-xs font-bold text-gray-500 dark:text-gray-400 mb-2">Klasse:</p>
-              <div className="flex flex-wrap gap-1 justify-center">
-                {GRADES.map((g) => (
-                  <button
-                    key={g}
-                    type="button"
-                    onClick={() => setGrade(g)}
-                    className={`w-9 h-9 rounded-kids text-xs font-black transition-all ${
-                      grade === g ? "bg-kidsBlue text-white shadow-kids" : "bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300"
-                    }`}
-                  >
-                    {g}
-                  </button>
-                ))}
-              </div>
+          <div className="mb-4">
+            <p className="text-xs font-bold text-gray-500 dark:text-gray-400 mb-2">Klasse wählen:</p>
+            <div className="flex flex-wrap gap-1 justify-center">
+              {GRADES.map((g) => (
+                <button
+                  key={g}
+                  type="button"
+                  onClick={() => setGrade(g)}
+                  className={`w-9 h-9 rounded-kids text-xs font-black transition-all ${
+                    grade === g ? "bg-kidsBlue text-white shadow-kids" : "bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300"
+                  }`}
+                >
+                  {g}
+                </button>
+              ))}
             </div>
-          )}
-          {session && (
-            <p className="text-xs text-gray-400 dark:text-gray-500 mb-4">
-              Aufgaben für Klasse {grade} 📚
-            </p>
-          )}
+          </div>
 
           <div className="flex gap-2 justify-center mb-5">
             {DIFFICULTIES.map((d) => (
@@ -190,7 +182,7 @@ export default function MathePage() {
       {question && (
         <KidsCard className="text-center mb-5 py-8 dark:bg-slate-800">
           <p className="text-kids-xl font-black text-gray-800 dark:text-white">
-            {question.num1} {question.operator} {question.num2} = ?
+            {formatQuestion(question)}
           </p>
         </KidsCard>
       )}

@@ -8,14 +8,14 @@ export function useParentAuth() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function register(email: string, password: string) {
+  async function register(email: string, password: string, pin: string) {
     setLoading(true);
     setError(null);
     try {
       const res = await fetch("/api/auth/parent-register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, pin }),
       });
       const data = await res.json();
       if (!res.ok) { setError(data.error); return false; }
@@ -55,5 +55,5 @@ export function useParentAuth() {
     router.push("/login");
   }
 
-  return { register, login, logout, loading, error, clearError: () => setError(null) };
+  return { register, login, logout, loading, error, clearError: () => setError(null) } as const;
 }

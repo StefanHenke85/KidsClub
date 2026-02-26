@@ -44,6 +44,9 @@ export default function KindLoginPage() {
         parentId: data.child.parentId,
         xpTotal: data.child.xpTotal ?? 0,
         level: data.child.level ?? 1,
+        mascotAnimal: data.child.mascotAnimal ?? "fuchs",
+        mascotName: data.child.mascotName ?? "Kiko",
+        bundesland: data.child.bundesland ?? "NRW",
       });
       router.push("/");
     } catch {

@@ -2,9 +2,28 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { MASCOTS } from "@/lib/mascots";
 
-const AVATARS = ["🦊", "🐱", "🐶", "🐼", "🦁", "🐸", "🦄", "🐧", "🐻", "🐨"];
 const GRADES = Array.from({ length: 13 }, (_, i) => i + 1);
+
+const BUNDESLAENDER = [
+  { code: "BW", name: "Baden-Württemberg" },
+  { code: "BY", name: "Bayern" },
+  { code: "BE", name: "Berlin" },
+  { code: "BB", name: "Brandenburg" },
+  { code: "HB", name: "Bremen" },
+  { code: "HH", name: "Hamburg" },
+  { code: "HE", name: "Hessen" },
+  { code: "MV", name: "Mecklenburg-Vorpommern" },
+  { code: "NI", name: "Niedersachsen" },
+  { code: "NRW", name: "Nordrhein-Westfalen" },
+  { code: "RP", name: "Rheinland-Pfalz" },
+  { code: "SL", name: "Saarland" },
+  { code: "SN", name: "Sachsen" },
+  { code: "ST", name: "Sachsen-Anhalt" },
+  { code: "SH", name: "Schleswig-Holstein" },
+  { code: "TH", name: "Thüringen" },
+];
 
 export default function NewKindPage() {
   const router = useRouter();
@@ -12,13 +31,23 @@ export default function NewKindPage() {
   const [age, setAge] = useState("");
   const [grade, setGrade] = useState(1);
   const [loginCode, setLoginCode] = useState("");
-  const [avatarEmoji, setAvatarEmoji] = useState("🦊");
+  const [mascotAnimal, setMascotAnimal] = useState("fuchs");
+  const [mascotName, setMascotName] = useState("Kiko");
   const [dailyLimit, setDailyLimit] = useState(60);
+  const [bundesland, setBundesland] = useState("NRW");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   function generateCode() {
     setLoginCode(String(Math.floor(1000 + Math.random() * 9000)));
+  }
+
+  function handleMascotSelect(id: string, defaultName: string) {
+    setMascotAnimal(id);
+    const currentDefault = MASCOTS.find((m) => m.id === mascotAnimal)?.defaultName ?? "";
+    if (!mascotName || mascotName === currentDefault) {
+      setMascotName(defaultName);
+    }
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -30,6 +59,7 @@ export default function NewKindPage() {
     setLoading(true);
     setError(null);
 
+    const selectedMascot = MASCOTS.find((m) => m.id === mascotAnimal);
     const res = await fetch("/api/kinder", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -38,14 +68,19 @@ export default function NewKindPage() {
         age: age ? parseInt(age) : null,
         grade,
         loginCode,
-        avatarEmoji,
+        avatarEmoji: selectedMascot?.emoji ?? "🦊",
+        mascotAnimal,
+        mascotName: mascotName.trim() || selectedMascot?.defaultName || "Kiko",
         dailyLimitMinutes: dailyLimit,
+        bundesland,
       }),
     });
     const data = await res.json();
     if (!res.ok) { setError(data.error); setLoading(false); return; }
     router.push("/eltern/kinder");
   }
+
+  const selectedMascot = MASCOTS.find((m) => m.id === mascotAnimal);
 
   return (
     <div className="max-w-lg mx-auto py-4">
@@ -54,28 +89,50 @@ export default function NewKindPage() {
       </h2>
 
       <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-800 rounded-kids-lg shadow-kids p-5 flex flex-col gap-4">
-        {/* Avatar */}
+
+        {/* Mascot picker */}
         <div>
-          <label className="block text-kids-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Avatar</label>
-          <div className="flex flex-wrap gap-2">
-            {AVATARS.map((a) => (
+          <label className="block text-kids-sm font-bold text-gray-700 dark:text-gray-300 mb-2">
+            Maskottchen wählen
+          </label>
+          <div className="flex flex-wrap gap-2 mb-3">
+            {MASCOTS.map((m) => (
               <button
-                key={a}
+                key={m.id}
                 type="button"
-                onClick={() => setAvatarEmoji(a)}
-                className={`text-3xl w-12 h-12 rounded-kids transition-all ${
-                  avatarEmoji === a ? "bg-kidsGreen/20 border-2 border-kidsGreen" : "bg-gray-100 dark:bg-slate-700"
+                onClick={() => handleMascotSelect(m.id, m.defaultName)}
+                title={m.hint}
+                className={`text-3xl w-12 h-12 rounded-kids transition-all flex items-center justify-center ${
+                  mascotAnimal === m.id
+                    ? "bg-kidsPurple/20 border-2 border-kidsPurple scale-110"
+                    : "bg-gray-100 dark:bg-slate-700 border-2 border-transparent"
                 }`}
               >
-                {a}
+                {m.emoji}
               </button>
             ))}
           </div>
+          {selectedMascot && (
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+              {selectedMascot.emoji} {selectedMascot.hint}
+            </p>
+          )}
+          <label className="block text-kids-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
+            Name des Maskottchens
+          </label>
+          <input
+            type="text"
+            value={mascotName}
+            onChange={(e) => setMascotName(e.target.value)}
+            placeholder={selectedMascot?.defaultName ?? "Kiko"}
+            maxLength={20}
+            className="w-full border-2 border-gray-200 dark:border-slate-600 rounded-kids px-4 py-2 text-kids-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:border-kidsPurple outline-none"
+          />
         </div>
 
         {/* Name */}
         <div>
-          <label className="block text-kids-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Name *</label>
+          <label className="block text-kids-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Name des Kindes *</label>
           <input
             type="text"
             value={name}
@@ -112,6 +169,26 @@ export default function NewKindPage() {
               ))}
             </select>
           </div>
+        </div>
+
+        {/* Bundesland */}
+        <div>
+          <label className="block text-kids-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
+            Bundesland *
+          </label>
+          <select
+            value={bundesland}
+            onChange={(e) => setBundesland(e.target.value)}
+            title="Bundesland auswählen"
+            className="w-full border-2 border-gray-200 dark:border-slate-600 rounded-kids px-4 py-2 text-kids-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:border-kidsBlue outline-none"
+          >
+            {BUNDESLAENDER.map((bl) => (
+              <option key={bl.code} value={bl.code}>{bl.name}</option>
+            ))}
+          </select>
+          <p className="text-xs text-gray-400 mt-1">
+            Kiko passt die Hausaufgaben-Hilfe an den Lehrplan deines Bundeslandes an.
+          </p>
         </div>
 
         {/* Login Code */}

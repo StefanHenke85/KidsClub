@@ -5,7 +5,7 @@ import PageWrapper from "@/components/layout/PageWrapper";
 import KidsCard from "@/components/ui/KidsCard";
 import BigButton from "@/components/ui/BigButton";
 import XpRewardPopup from "@/components/progress/XpRewardPopup";
-import { getWordsForGrade, scrambleWord } from "@/lib/curriculum/deutschByGrade";
+import { getRandomWordForGrade, scrambleWord } from "@/lib/curriculum/deutschByGrade";
 import type { DeutschWord } from "@/lib/curriculum/deutschByGrade";
 import { useGameStore } from "@/store/useGameStore";
 import { useChildSessionStore } from "@/store/useChildSessionStore";
@@ -36,8 +36,7 @@ export default function DeutschPage() {
   }, [session?.grade]);
 
   const nextWord = useCallback(() => {
-    const words = getWordsForGrade(grade);
-    const w = words[Math.floor(Math.random() * words.length)];
+    const w = getRandomWordForGrade(grade);
     setWord(w);
     setShuffled(scrambleWord(w.word));
     setSelected([]);
@@ -102,30 +101,23 @@ export default function DeutschPage() {
           </p>
           {best > 0 && <p className="text-kids-sm text-gray-400 mb-4">Dein Rekord: {best} Punkte ⭐</p>}
 
-          {!session && (
-            <div className="mb-4">
-              <p className="text-xs font-bold text-gray-500 dark:text-gray-400 mb-2">Klasse:</p>
-              <div className="flex flex-wrap gap-1 justify-center">
-                {GRADES.map((g) => (
-                  <button
-                    key={g}
-                    type="button"
-                    onClick={() => setGrade(g)}
-                    className={`w-9 h-9 rounded-kids text-xs font-black transition-all ${
-                      grade === g ? "bg-kidsGreen text-white shadow-kids" : "bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300"
-                    }`}
-                  >
-                    {g}
-                  </button>
-                ))}
-              </div>
+          <div className="mb-4">
+            <p className="text-xs font-bold text-gray-500 dark:text-gray-400 mb-2">Klasse wählen:</p>
+            <div className="flex flex-wrap gap-1 justify-center">
+              {GRADES.map((g) => (
+                <button
+                  key={g}
+                  type="button"
+                  onClick={() => setGrade(g)}
+                  className={`w-9 h-9 rounded-kids text-xs font-black transition-all ${
+                    grade === g ? "bg-kidsGreen text-white shadow-kids" : "bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-gray-300"
+                  }`}
+                >
+                  {g}
+                </button>
+              ))}
             </div>
-          )}
-          {session && (
-            <p className="text-xs text-gray-400 dark:text-gray-500 mb-4">
-              Wörter für Klasse {grade} 📚
-            </p>
-          )}
+          </div>
 
           <BigButton color="green" size="lg" onClick={start}>Spielen! 📝</BigButton>
         </KidsCard>

@@ -5,11 +5,13 @@ import { useState } from "react";
 interface MascotBubbleProps {
   message?: string;
   position?: "left" | "right";
+  emoji?: string;
 }
 
 export default function MascotBubble({
   message = "Hallo! Ich bin Kiko! 🦊",
   position = "right",
+  emoji = "🦊",
 }: MascotBubbleProps) {
   const [visible, setVisible] = useState(true);
 
@@ -32,7 +34,7 @@ export default function MascotBubble({
         </div>
       )}
       <div className="text-5xl animate-float select-none cursor-pointer" onClick={() => setVisible(!visible)}>
-        🦊
+        {emoji}
       </div>
     </div>
   );

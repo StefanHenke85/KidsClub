@@ -14,7 +14,8 @@ export async function POST(req: NextRequest) {
     const db = getDb();
 
     const result = await db.execute({
-      sql: `SELECT c.id, c.name, c.grade, c.avatar_emoji, c.parent_id, c.daily_limit_minutes
+      sql: `SELECT c.id, c.name, c.grade, c.avatar_emoji, c.parent_id, c.daily_limit_minutes,
+                   c.mascot_animal, c.mascot_name, c.bundesland
             FROM children c
             WHERE LOWER(c.name) = LOWER(?) AND c.login_code = ?`,
       args: [name.trim(), code],
@@ -32,6 +33,9 @@ export async function POST(req: NextRequest) {
       grade: child.grade as GradeLevel,
       avatarEmoji: child.avatar_emoji as string,
       parentId: child.parent_id as string,
+      mascotAnimal: (child.mascot_animal as string) ?? "fuchs",
+      mascotName: (child.mascot_name as string) ?? "Kiko",
+      bundesland: (child.bundesland as string) ?? "NRW",
     });
 
     // Get or create progress
@@ -70,6 +74,9 @@ export async function POST(req: NextRequest) {
         name: child.name,
         grade: child.grade,
         avatarEmoji: child.avatar_emoji,
+        mascotAnimal: child.mascot_animal ?? "fuchs",
+        mascotName: child.mascot_name ?? "Kiko",
+        bundesland: child.bundesland ?? "NRW",
         dailyLimitMinutes: child.daily_limit_minutes,
         xpTotal: prog.rows[0]?.xp_total ?? 0,
         level: prog.rows[0]?.level ?? 1,
@@ -80,7 +87,7 @@ export async function POST(req: NextRequest) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 60 * 60 * 12, // 12h
+      maxAge: 60 * 60 * 24 * 30, // 30 Tage
       path: "/",
     });
 

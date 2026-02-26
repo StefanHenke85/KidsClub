@@ -5,17 +5,19 @@ import bcrypt from "bcryptjs";
 import { randomUUID } from "crypto";
 
 export async function POST(req: NextRequest) {
-  const { email, password } = await req.json();
+  const { email, password, pin } = await req.json();
 
   if (!email || !password || password.length < 6) {
     return NextResponse.json({ error: "E-Mail und Passwort (mind. 6 Zeichen) nötig" }, { status: 400 });
+  }
+  if (!pin || pin.length !== 4 || !/^\d{4}$/.test(pin)) {
+    return NextResponse.json({ error: "PIN muss genau 4 Ziffern haben" }, { status: 400 });
   }
 
   try {
     await initDb();
     const db = getDb();
 
-    // Check if email already exists
     const existing = await db.execute({
       sql: "SELECT id FROM parents WHERE email = ?",
       args: [email.toLowerCase()],
@@ -25,11 +27,12 @@ export async function POST(req: NextRequest) {
     }
 
     const passwordHash = await bcrypt.hash(password, 12);
+    const pinHash = await bcrypt.hash(pin, 10);
     const parentId = randomUUID();
 
     await db.execute({
-      sql: "INSERT INTO parents (id, email, password_hash) VALUES (?, ?, ?)",
-      args: [parentId, email.toLowerCase(), passwordHash],
+      sql: "INSERT INTO parents (id, email, password_hash, pin_hash) VALUES (?, ?, ?, ?)",
+      args: [parentId, email.toLowerCase(), passwordHash, pinHash],
     });
 
     const token = await signParentSession({ parentId, email: email.toLowerCase() });
@@ -39,7 +42,7 @@ export async function POST(req: NextRequest) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
+      maxAge: 60 * 60 * 24 * 7,
       path: "/",
     });
     return res;

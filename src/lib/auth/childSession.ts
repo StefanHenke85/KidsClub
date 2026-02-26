@@ -10,13 +10,16 @@ export interface ChildSessionPayload {
   grade: number;
   avatarEmoji: string;
   parentId: string;
+  mascotAnimal: string;
+  mascotName: string;
+  bundesland: string;
 }
 
 export async function signChildSession(payload: ChildSessionPayload): Promise<string> {
   return new SignJWT({ ...payload })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("12h")
+    .setExpirationTime("30d")
     .sign(SECRET_KEY);
 }
 
