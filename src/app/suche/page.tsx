@@ -71,22 +71,29 @@ export default function SuchePage() {
       {!isFetching && data?.results && data.results.length > 0 && (
         <div className="flex flex-col gap-3">
           {data.results.map((r, i) => (
-            <a key={i} href={r.url} target="_blank" rel="noopener noreferrer">
-              <KidsCard className="hover:shadow-kids-hover transition-shadow active:scale-95">
-                <div className="flex items-start gap-3">
-                  {r.favicon && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={r.favicon} alt="" className="w-5 h-5 mt-1 rounded-sm" />
+            <a
+              key={i}
+              href={r.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${r.title} – öffnet in neuem Tab`}
+              className="block rounded-kids-lg bg-white dark:bg-slate-700 border-2 border-yellow-200 dark:border-yellow-700/50 shadow-md hover:shadow-lg active:scale-[0.98] transition-all focus-visible:outline-2 focus-visible:outline-kidsYellow focus-visible:outline-offset-2"
+            >
+              <div className="p-4 flex items-start gap-3">
+                {r.favicon ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={r.favicon} alt="" aria-hidden="true" className="w-8 h-8 mt-0.5 rounded-md flex-shrink-0 object-contain bg-gray-100 dark:bg-slate-600 p-1" />
+                ) : (
+                  <span aria-hidden="true" className="w-8 h-8 mt-0.5 rounded-md flex-shrink-0 bg-yellow-100 dark:bg-yellow-900/30 flex items-center justify-center text-base">🔗</span>
+                )}
+                <div className="flex-1 min-w-0">
+                  <p className="text-base font-black text-kidsBlue dark:text-blue-300 leading-tight mb-1">{r.title}</p>
+                  {r.snippet && (
+                    <p className="text-sm text-gray-600 dark:text-gray-200 leading-snug line-clamp-2">{r.snippet}</p>
                   )}
-                  <div>
-                    <p className="text-kids-sm font-black text-blue-600 dark:text-blue-400 underline">{r.title}</p>
-                    {r.snippet && (
-                      <p className="text-sm text-gray-600 dark:text-gray-300 mt-1 line-clamp-2">{r.snippet}</p>
-                    )}
-                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-1 truncate">{r.url}</p>
-                  </div>
+                  <p className="text-xs text-gray-400 dark:text-gray-400 mt-1.5 truncate">{r.url}</p>
                 </div>
-              </KidsCard>
+              </div>
             </a>
           ))}
         </div>
