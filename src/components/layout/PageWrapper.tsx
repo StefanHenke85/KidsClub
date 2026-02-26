@@ -26,7 +26,7 @@ export default function PageWrapper({
   const router = useRouter();
 
   return (
-    <main id="main-content" className={`min-h-screen ${color} pb-28 font-kids transition-colors duration-300`}>
+    <main id="main-content" className={`min-h-screen ${color} pb-36 font-kids transition-colors duration-300`}>
       {/* Verspielter Header mit Gradient + Welle */}
       <header className={`relative bg-gradient-to-br ${headerGradient} px-4 pt-8 pb-12 overflow-hidden`}>
         {/* Dekorative Elemente – für Screenreader ausgeblendet */}

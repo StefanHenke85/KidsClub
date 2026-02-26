@@ -75,7 +75,7 @@ export default function HomePage() {
     : "Hallo! Ich bin Kiko. Ich helfe dir beim Lernen! 😊";
 
   return (
-    <main id="main-content" className="min-h-screen font-kids pb-32 transition-colors duration-300">
+    <main id="main-content" className="min-h-screen font-kids pb-36 transition-colors duration-300">
 
       {/* ── Hero-Header ── */}
       <header className="relative overflow-hidden hero-gradient px-4 pt-10 pb-16">

@@ -55,7 +55,7 @@ export default function KidsNavbar() {
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50">
       {/* Weicher Übergang nach oben */}
-      <div className="h-6 bg-gradient-to-t from-white/90 dark:from-slate-900/90 to-transparent pointer-events-none" />
+      <div className="h-8 bg-gradient-to-t from-white/95 dark:from-slate-900/95 to-transparent pointer-events-none" />
 
       <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t-2 border-purple-100 dark:border-slate-700 px-3 pb-safe pt-1">
         <ul className="flex justify-around items-center h-16 max-w-lg mx-auto gap-1">
