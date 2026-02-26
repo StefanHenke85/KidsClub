@@ -212,4 +212,15 @@ export async function initDb() {
   for (const sql of migrations) {
     try { await db.execute({ sql }); } catch { /* column already exists */ }
   }
+
+  // password_reset_tokens table (separate, not a migration)
+  await db.execute({
+    sql: `CREATE TABLE IF NOT EXISTS password_reset_tokens (
+      id TEXT PRIMARY KEY,
+      parent_id TEXT NOT NULL REFERENCES parents(id) ON DELETE CASCADE,
+      token_hash TEXT NOT NULL,
+      expires_at TEXT NOT NULL,
+      used INTEGER DEFAULT 0
+    )`,
+  });
 }
