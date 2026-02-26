@@ -57,16 +57,19 @@ export default function SpielePage() {
       </p>
       <div className="flex flex-col gap-4">
         {GAMES.map(({ href, emoji, label, desc, sub, bg, shadow }) => (
-          <Link key={href} href={href}>
-            <div className={`${bg} ${shadow} rounded-kids-lg p-5 flex items-start gap-4 active:translate-y-1 transition-all`}>
-              <span className="text-5xl flex-shrink-0">{emoji}</span>
-              <div className="flex-1">
-                <p className="text-kids-md font-black text-gray-800 dark:text-white">{label}</p>
-                <p className="text-xs font-bold text-gray-700 dark:text-gray-200 mt-0.5">{sub}</p>
-                <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">{desc}</p>
-              </div>
-              <span className="text-3xl text-gray-700 dark:text-gray-200 flex-shrink-0 mt-1">›</span>
+          <Link
+            key={href}
+            href={href}
+            aria-label={`${label} spielen – ${sub}`}
+            className={`${bg} ${shadow} rounded-kids-lg p-5 flex items-start gap-4 active:translate-y-1 transition-all focus-visible:outline-4 focus-visible:outline-white focus-visible:outline-offset-2`}
+          >
+            <span aria-hidden="true" className="text-5xl flex-shrink-0">{emoji}</span>
+            <div className="flex-1">
+              <p className="text-kids-md font-black text-gray-800 dark:text-white">{label}</p>
+              <p className="text-xs font-bold text-gray-700 dark:text-gray-200 mt-0.5">{sub}</p>
+              <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">{desc}</p>
             </div>
+            <span aria-hidden="true" className="text-3xl text-gray-700 dark:text-gray-200 flex-shrink-0 mt-1">›</span>
           </Link>
         ))}
       </div>

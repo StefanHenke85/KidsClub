@@ -46,26 +46,25 @@ export default function HausaufgabenPage() {
         body: JSON.stringify({ messages: newMessages }),
       });
     } catch {
-      setMessages((prev) => [...prev, { role: "assistant", content: "Keine Verbindung. Bist du online? 🌐" }]);
+      setMessages((prev) => [...prev, { role: "assistant", content: "Keine Verbindung. Bist du online?" }]);
       setLoading(false);
       return;
     }
 
-    // Fehlerfall: JSON-Fehlermeldung vom Server
     if (!res.ok) {
       const errData = await res.json().catch(() => ({ error: "Unbekannter Fehler" }));
       if (res.status === 503) {
-        setApiError("⚠️ Kein API-Key konfiguriert! Bitte GEMINI_API_KEY in .env.local eintragen und Server neu starten.");
+        setApiError("Kein API-Key konfiguriert! Bitte GROQ_API_KEY in .env.local eintragen und Server neu starten.");
       } else {
         setApiError(errData.error ?? "Serverfehler");
       }
-      setMessages((prev) => [...prev, { role: "assistant", content: "Hoppla! Kiko schläft gerade. Versuch es gleich nochmal! 😴" }]);
+      setMessages((prev) => [...prev, { role: "assistant", content: "Hoppla! Kiko schläft gerade. Versuch es gleich nochmal!" }]);
       setLoading(false);
       return;
     }
 
     if (!res.body) {
-      setMessages((prev) => [...prev, { role: "assistant", content: "Hoppla! Etwas hat nicht geklappt. 😊" }]);
+      setMessages((prev) => [...prev, { role: "assistant", content: "Hoppla! Etwas hat nicht geklappt." }]);
       setLoading(false);
       return;
     }
@@ -96,34 +95,36 @@ export default function HausaufgabenPage() {
 
   return (
     <PageWrapper emoji="✏️" title="Hausaufgaben" color="bg-blue-50 dark:bg-slate-900" backHref="/" headerGradient="from-sky-400 via-blue-300 to-indigo-300">
+
       {/* Bundesland-Hinweis */}
       {session?.bundesland && (
         <div className="mb-3 flex items-center gap-2 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-kids px-3 py-2 text-xs text-blue-600 dark:text-blue-300 font-semibold">
-          <span>🗺️</span>
+          <span aria-hidden="true">🗺️</span>
           <span>Kiko kennt den Lehrplan für <strong>{session.bundesland}</strong> – Inhalte können je nach Bundesland leicht abweichen.</span>
         </div>
       )}
 
-      {/* API-Key Warnung */}
+      {/* API-Fehler */}
       {apiError && (
-        <div className="mb-3 bg-red-100 dark:bg-red-900/40 border-2 border-red-300 rounded-kids px-4 py-3 text-sm font-bold text-red-700 dark:text-red-300">
+        <div role="alert" className="mb-3 bg-red-100 dark:bg-red-900/40 border-2 border-red-300 rounded-kids px-4 py-3 text-sm font-bold text-red-700 dark:text-red-300">
           {apiError}
         </div>
       )}
 
       {/* Fach wählen */}
-      <div className="flex gap-2 flex-wrap mb-4">
+      <div role="group" aria-label="Fach auswählen" className="flex gap-2 flex-wrap mb-4">
         {SUBJECTS.map((s) => (
           <button
             key={s.id}
             onClick={() => setSubject(s.id)}
-            className={`px-4 py-2 rounded-kids font-bold text-kids-sm transition-all ${
+            aria-pressed={subject === s.id ? "true" : "false"}
+            className={`px-4 py-2 rounded-kids font-bold text-kids-sm transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-kidsBlue ${
               subject === s.id
                 ? "bg-kidsBlue dark:bg-blue-700 shadow-kids text-gray-800 dark:text-white"
                 : "bg-white dark:bg-slate-700 text-gray-500 dark:text-gray-300 border-2 border-gray-200 dark:border-slate-600"
             }`}
           >
-            {s.emoji} {s.label}
+            <span aria-hidden="true">{s.emoji}</span> {s.label}
           </button>
         ))}
       </div>
@@ -132,37 +133,43 @@ export default function HausaufgabenPage() {
       <KidsCard className="min-h-[350px] flex flex-col gap-3 mb-4 dark:bg-slate-800">
         {messages.length === 0 && (
           <div className="flex flex-col items-center justify-center h-40 gap-3 text-center">
-            <span className="text-5xl animate-float">🦊</span>
+            <span aria-hidden="true" className="text-5xl animate-float">🦊</span>
             <p className="text-kids-sm font-bold text-gray-600 dark:text-gray-300">
-              Hallo! Ich bin Kiko. Stell mir deine Frage! 😊
+              Hallo! Ich bin Kiko. Stell mir deine Frage!
             </p>
           </div>
         )}
-        {messages.map((m, i) => (
-          <div
-            key={i}
-            className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
-          >
-            {m.role === "assistant" && (
-              <span className="text-2xl mr-2 self-end">🦊</span>
-            )}
+
+        <div role="log" aria-label="Gespräch mit Kiko" aria-live="polite" aria-relevant="additions" className="flex flex-col gap-3">
+          {messages.map((m, i) => (
             <div
-              className={`max-w-[80%] px-4 py-3 rounded-kids-lg text-kids-sm font-semibold leading-relaxed ${
-                m.role === "user"
-                  ? "bg-kidsBlue dark:bg-blue-700 text-gray-800 dark:text-white"
-                  : "bg-white dark:bg-slate-700 border-2 border-gray-100 dark:border-slate-600 text-gray-800 dark:text-gray-100 select-none"
-              }`}
-              onCopy={m.role === "assistant" ? (e) => e.preventDefault() : undefined}
-              onCut={m.role === "assistant" ? (e) => e.preventDefault() : undefined}
-              onContextMenu={m.role === "assistant" ? (e) => e.preventDefault() : undefined}
+              key={i}
+              className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
             >
-              {m.content || (loading && i === messages.length - 1 ? "..." : "")}
+              {m.role === "assistant" && (
+                <span aria-hidden="true" className="text-2xl mr-2 self-end">🦊</span>
+              )}
+              <div
+                role="article"
+                aria-label={m.role === "assistant" ? "Kiko antwortet" : "Deine Frage"}
+                className={`max-w-[80%] px-4 py-3 rounded-kids-lg text-kids-sm font-semibold leading-relaxed ${
+                  m.role === "user"
+                    ? "bg-kidsBlue dark:bg-blue-700 text-gray-800 dark:text-white"
+                    : "bg-white dark:bg-slate-700 border-2 border-gray-100 dark:border-slate-600 text-gray-800 dark:text-gray-100 select-none"
+                }`}
+                onCopy={m.role === "assistant" ? (e) => e.preventDefault() : undefined}
+                onCut={m.role === "assistant" ? (e) => e.preventDefault() : undefined}
+                onContextMenu={m.role === "assistant" ? (e) => e.preventDefault() : undefined}
+              >
+                {m.content || (loading && i === messages.length - 1 ? "..." : "")}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+
         {loading && messages[messages.length - 1]?.content === "" && (
-          <div className="flex justify-start">
-            <span className="text-2xl mr-2">🦊</span>
+          <div className="flex justify-start" aria-live="polite">
+            <span aria-hidden="true" className="text-2xl mr-2">🦊</span>
             <div className="bg-white dark:bg-slate-700 border-2 border-gray-100 dark:border-slate-600 px-4 py-3 rounded-kids-lg">
               <span className="animate-pulse text-kids-sm font-semibold text-gray-500 dark:text-gray-400">Kiko denkt nach...</span>
             </div>
@@ -173,7 +180,11 @@ export default function HausaufgabenPage() {
 
       {/* Eingabe */}
       <div className="flex gap-2">
+        <label htmlFor="homework-input" className="sr-only">
+          Frage an Kiko ({SUBJECTS.find((s) => s.id === subject)?.label})
+        </label>
         <input
+          id="homework-input"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && sendMessage()}
@@ -181,15 +192,16 @@ export default function HausaufgabenPage() {
           className="flex-1 border-4 border-kidsBlue dark:border-blue-600 rounded-kids px-4 py-3 text-kids-sm font-semibold outline-none focus:border-kidsPurple dark:bg-slate-700 dark:text-white dark:placeholder-gray-400"
           disabled={loading}
         />
-        <BigButton color="blue" size="sm" onClick={sendMessage} disabled={loading || !input.trim()}>
-          ➤
+        <BigButton color="blue" size="sm" onClick={sendMessage} disabled={loading || !input.trim()} aria-label="Nachricht senden">
+          <span aria-hidden="true">➤</span>
         </BigButton>
       </div>
 
       {messages.length > 0 && (
         <button
           onClick={() => setMessages([])}
-          className="mt-3 text-sm text-gray-400 dark:text-gray-500 underline"
+          aria-label="Gespräch zurücksetzen und neu beginnen"
+          className="mt-3 text-sm text-gray-400 dark:text-gray-500 underline focus-visible:outline-2 focus-visible:outline-gray-400 focus-visible:outline-offset-2 rounded"
         >
           Neues Gespräch starten
         </button>

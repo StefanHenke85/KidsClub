@@ -57,7 +57,7 @@ const FEATURES = [
   },
 ];
 
-// Schwebende Deko-Elemente rund um den Hero
+// Schwebende Deko-Elemente – rein dekorativ, für Screenreader ausgeblendet
 const DECO = [
   { emoji: "⭐", pos: "top-4 left-3",     anim: "animate-twinkle",    size: "text-2xl" },
   { emoji: "✨", pos: "top-8 right-4",    anim: "animate-sparkle",    size: "text-xl"  },
@@ -75,22 +75,23 @@ export default function HomePage() {
     : "Hallo! Ich bin Kiko. Ich helfe dir beim Lernen! 😊";
 
   return (
-    <main className="min-h-screen font-kids pb-32 transition-colors duration-300">
+    <main id="main-content" className="min-h-screen font-kids pb-32 transition-colors duration-300">
 
       {/* ── Hero-Header ── */}
       <header className="relative overflow-hidden hero-gradient px-4 pt-10 pb-16">
-        {/* Dekorative schwebende Elemente */}
+        {/* Dekorative schwebende Elemente – für Screenreader ausgeblendet */}
         {DECO.map((d, i) => (
           <span
             key={i}
+            aria-hidden="true"
             className={`absolute pointer-events-none select-none ${d.pos} ${d.anim} ${d.size}`}
           >
             {d.emoji}
           </span>
         ))}
 
-        {/* Wellen-Trennlinie */}
-        <div className="absolute bottom-0 left-0 right-0 overflow-hidden leading-none">
+        {/* Wellen-Trennlinie – dekorativ */}
+        <div aria-hidden="true" className="absolute bottom-0 left-0 right-0 overflow-hidden leading-none">
           <svg
             viewBox="0 0 1200 56"
             preserveAspectRatio="none"
@@ -104,12 +105,12 @@ export default function HomePage() {
           {session ? (
             /* ── Eingeloggt ── */
             <div className="flex items-center gap-4 mb-5">
-              <span className="text-7xl animate-float drop-shadow-lg sticker leading-none">
+              <span aria-hidden="true" className="text-7xl animate-float drop-shadow-lg sticker leading-none">
                 {mascotEmoji}
               </span>
               <div>
                 <h1 className="text-kids-xl font-black text-white drop-shadow-md leading-tight">
-                  Hallo, {session.name}! 👋
+                  Hallo, {session.name}!
                 </h1>
                 <p className="text-sm text-white/85 font-semibold mt-0.5">
                   {session.mascotName} ist dabei · Klasse {session.grade}
@@ -119,7 +120,7 @@ export default function HomePage() {
           ) : (
             /* ── Nicht eingeloggt ── */
             <div className="text-center mb-5">
-              <div className="text-9xl mb-3 animate-float drop-shadow-xl leading-none sticker">🦊</div>
+              <div aria-hidden="true" className="text-9xl mb-3 animate-float drop-shadow-xl leading-none sticker">🦊</div>
               <h1 className="text-4xl font-black text-white mb-1 drop-shadow-md">KidsClub</h1>
               <p className="text-white/95 font-black text-xl">Deine sichere Lernwelt</p>
               <p className="text-white/75 text-sm mt-1 font-semibold">Klasse 1–13 · elternüberwacht · 100% sicher</p>
@@ -132,15 +133,15 @@ export default function HomePage() {
             <div className="flex flex-col gap-3 mt-5 max-w-sm mx-auto">
               <Link
                 href="/login/kind"
-                className="bg-white text-kidsPurple rounded-kids py-4 text-kids-sm font-black text-center shadow-[0_6px_0_rgba(109,40,217,0.3)] active:translate-y-1 active:shadow-[0_2px_0_rgba(109,40,217,0.3)] transition-all hover:brightness-105"
+                className="bg-white text-kidsPurple rounded-kids py-4 text-kids-sm font-black text-center shadow-[0_6px_0_rgba(109,40,217,0.3)] active:translate-y-1 active:shadow-[0_2px_0_rgba(109,40,217,0.3)] transition-all hover:brightness-105 focus-visible:outline-2 focus-visible:outline-kidsPurple focus-visible:outline-offset-2"
               >
-                🔑 Als Kind anmelden
+                <span aria-hidden="true">🔑</span> Als Kind anmelden
               </Link>
               <Link
                 href="/login"
-                className="bg-white/30 text-white rounded-kids py-3 text-sm font-bold text-center border-2 border-white/50 active:translate-y-1 transition-all hover:bg-white/40"
+                className="bg-white/30 text-white rounded-kids py-3 text-sm font-bold text-center border-2 border-white/50 active:translate-y-1 transition-all hover:bg-white/40 focus-visible:outline-2 focus-visible:outline-white focus-visible:outline-offset-2"
               >
-                👪 Eltern-Bereich & Registrierung
+                <span aria-hidden="true">👪</span> Eltern-Bereich &amp; Registrierung
               </Link>
             </div>
           )}
@@ -150,7 +151,7 @@ export default function HomePage() {
       {/* ── Stats-Chips (nur ausgeloggt) ── */}
       {!session && (
         <div className="px-4 py-5 max-w-lg mx-auto">
-          <div className="flex gap-2 flex-wrap justify-center">
+          <div className="flex gap-2 flex-wrap justify-center" role="list" aria-label="KidsClub Merkmale">
             {[
               { emoji: "📚", text: "5 Fächer" },
               { emoji: "🏫", text: "13 Klassen" },
@@ -159,9 +160,10 @@ export default function HomePage() {
             ].map((s) => (
               <div
                 key={s.text}
+                role="listitem"
                 className="flex items-center gap-1.5 bg-white dark:bg-slate-800 rounded-full px-4 py-2 text-sm font-bold text-gray-600 dark:text-gray-300 shadow-md border-2 border-purple-100 dark:border-slate-700"
               >
-                <span className="text-base">{s.emoji}</span>
+                <span aria-hidden="true" className="text-base">{s.emoji}</span>
                 <span>{s.text}</span>
               </div>
             ))}
@@ -170,9 +172,9 @@ export default function HomePage() {
       )}
 
       {/* ── Feature-Kacheln ── */}
-      <section className="px-4 pt-2 pb-4 max-w-lg mx-auto w-full">
+      <section className="px-4 pt-2 pb-4 max-w-lg mx-auto w-full" aria-label="Bereiche">
         <h2 className="text-kids-sm font-black text-gray-500 dark:text-gray-400 mb-4 uppercase tracking-widest text-center">
-          {session ? "Was machst du heute? 🚀" : "Was kann KidsClub?"}
+          {session ? "Was machst du heute?" : "Was kann KidsClub?"}
         </h2>
 
         <div className="grid grid-cols-2 gap-4 sm:gap-5">
@@ -180,6 +182,7 @@ export default function HomePage() {
             <Link
               key={href}
               href={href}
+              aria-label={label.replace("\n", " ")}
               className={`
                 ${bg} ${shadow} ${glow}
                 border-2 ${border}
@@ -188,9 +191,10 @@ export default function HomePage() {
                 flex flex-col items-center text-center gap-3
                 active:translate-y-1 transition-all duration-150
                 hover:scale-[1.03]
+                focus-visible:outline-4 focus-visible:outline-kidsPurple focus-visible:outline-offset-2
               `}
             >
-              <span className="text-5xl sm:text-6xl animate-float leading-none sticker">
+              <span aria-hidden="true" className="text-5xl sm:text-6xl animate-float leading-none sticker">
                 {emoji}
               </span>
               <div>
@@ -199,14 +203,14 @@ export default function HomePage() {
                 </p>
                 <p className="text-xs text-gray-500 mt-1 leading-tight font-semibold">{sub}</p>
               </div>
-              <span className={`w-3 h-3 rounded-full ${dot} opacity-80 shadow-sm`} />
+              <span aria-hidden="true" className={`w-3 h-3 rounded-full ${dot} opacity-80 shadow-sm`} />
             </Link>
           ))}
         </div>
       </section>
 
       {/* ── Dekorativer Trennstrich ── */}
-      <div className="max-w-lg mx-auto px-4 my-4 flex items-center gap-3 opacity-40">
+      <div aria-hidden="true" className="max-w-lg mx-auto px-4 my-4 flex items-center gap-3 opacity-40">
         <div className="flex-1 h-px bg-gradient-to-r from-transparent via-purple-300 to-transparent" />
         <span className="text-lg">✦</span>
         <div className="flex-1 h-px bg-gradient-to-r from-transparent via-purple-300 to-transparent" />
@@ -221,22 +225,23 @@ export default function HomePage() {
               await fetch("/api/auth/kind-logout", { method: "POST" });
               useChildSessionStore.getState().setSession(null);
             }}
-            className="text-xs text-gray-400 dark:text-gray-500 underline underline-offset-2 hover:text-gray-600 transition-colors"
+            aria-label={`Abmelden als ${session.name}`}
+            className="text-xs text-gray-400 dark:text-gray-500 underline underline-offset-2 hover:text-gray-600 transition-colors focus-visible:outline-2 focus-visible:outline-gray-400 focus-visible:outline-offset-2 rounded"
           >
-            🚪 Abmelden ({session.name})
+            <span aria-hidden="true">🚪</span> Abmelden ({session.name})
           </button>
         )}
         <Link
           href="/eltern"
-          className="text-sm text-gray-400 dark:text-gray-500 font-semibold underline underline-offset-2 hover:text-gray-600 transition-colors"
+          className="text-sm text-gray-400 dark:text-gray-500 font-semibold underline underline-offset-2 hover:text-gray-600 transition-colors focus-visible:outline-2 focus-visible:outline-gray-400 focus-visible:outline-offset-2 rounded"
         >
-          🔒 Elternbereich
+          <span aria-hidden="true">🔒</span> Elternbereich
         </Link>
         <div className="flex justify-center gap-4 mt-1">
           <Link href="/impressum" className="text-xs text-gray-400 dark:text-gray-500 underline underline-offset-2 hover:text-gray-600 transition-colors">
             Impressum
           </Link>
-          <span className="text-xs text-gray-300 dark:text-gray-600">·</span>
+          <span aria-hidden="true" className="text-xs text-gray-300 dark:text-gray-600">·</span>
           <Link href="/datenschutz" className="text-xs text-gray-400 dark:text-gray-500 underline underline-offset-2 hover:text-gray-600 transition-colors">
             Datenschutz
           </Link>

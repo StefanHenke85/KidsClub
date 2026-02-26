@@ -37,6 +37,12 @@ export default function RootLayout({
   return (
     <html lang="de" className={nunito.variable}>
       <body className="font-kids bg-kidsBg dark:bg-slate-900 antialiased transition-colors duration-300">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:bg-kidsPurple focus:text-white focus:px-4 focus:py-2 focus:rounded-kids focus:font-black focus:text-sm"
+        >
+          Zum Inhalt springen
+        </a>
         <Providers>
           <SessionHydrator />
           <ThemeToggle />

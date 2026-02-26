@@ -33,10 +33,12 @@ export default function LoginPage() {
         {/* Card */}
         <div className="bg-white dark:bg-slate-800 rounded-kids-lg shadow-kids-lg p-6">
           {/* Tabs */}
-          <div className="flex mb-6 bg-gray-100 dark:bg-slate-700 rounded-kids p-1">
+          <div role="tablist" aria-label="Anmelden oder Registrieren" className="flex mb-6 bg-gray-100 dark:bg-slate-700 rounded-kids p-1">
             <button
+              role="tab"
+              aria-selected={mode === "login" ? "true" : "false"}
               onClick={() => setMode("login")}
-              className={`flex-1 py-2 rounded-kids text-kids-sm font-black transition-all ${
+              className={`flex-1 py-2 rounded-kids text-kids-sm font-black transition-all focus-visible:outline-2 focus-visible:outline-kidsBlue focus-visible:outline-offset-1 ${
                 mode === "login"
                   ? "bg-white dark:bg-slate-600 shadow text-gray-800 dark:text-white"
                   : "text-gray-500 dark:text-gray-400"
@@ -45,8 +47,10 @@ export default function LoginPage() {
               Anmelden
             </button>
             <button
+              role="tab"
+              aria-selected={mode === "register" ? "true" : "false"}
               onClick={() => setMode("register")}
-              className={`flex-1 py-2 rounded-kids text-kids-sm font-black transition-all ${
+              className={`flex-1 py-2 rounded-kids text-kids-sm font-black transition-all focus-visible:outline-2 focus-visible:outline-kidsBlue focus-visible:outline-offset-1 ${
                 mode === "register"
                   ? "bg-white dark:bg-slate-600 shadow text-gray-800 dark:text-white"
                   : "text-gray-500 dark:text-gray-400"
@@ -73,14 +77,16 @@ export default function LoginPage() {
                     : "border-gray-200 dark:border-slate-600 focus:border-kidsBlue"
                 }`}
               />
-              {showEmailHint && (
-                <p className="text-xs text-red-500 mt-1 font-semibold">
-                  ⚠️ Bitte eine gültige E-Mail eingeben (z.B. name@gmail.com) — du brauchst sie für einen Passwort-Reset!
-                </p>
-              )}
-              {mode === "register" && email.length > 0 && emailValid && (
-                <p className="text-xs text-kidsGreen mt-1 font-semibold">✓ E-Mail sieht gut aus</p>
-              )}
+              <div aria-live="polite" aria-atomic="true">
+                {showEmailHint && (
+                  <p className="text-xs text-red-500 mt-1 font-semibold">
+                    <span aria-hidden="true">⚠️</span> Bitte eine gültige E-Mail eingeben (z.B. name@gmail.com) — du brauchst sie für einen Passwort-Reset!
+                  </p>
+                )}
+                {mode === "register" && email.length > 0 && emailValid && (
+                  <p className="text-xs text-kidsGreen mt-1 font-semibold">✓ E-Mail sieht gut aus</p>
+                )}
+              </div>
             </div>
             <div>
               <label className="block text-kids-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
@@ -127,7 +133,7 @@ export default function LoginPage() {
             )}
 
             {error && (
-              <p className="text-sm text-red-500 font-semibold text-center">{error}</p>
+              <p role="alert" aria-live="assertive" className="text-sm text-red-500 font-semibold text-center">{error}</p>
             )}
 
             <button
