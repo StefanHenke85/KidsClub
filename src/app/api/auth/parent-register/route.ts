@@ -7,8 +7,12 @@ import { randomUUID } from "crypto";
 export async function POST(req: NextRequest) {
   const { email, password, pin } = await req.json();
 
-  if (!email || !password || password.length < 6) {
-    return NextResponse.json({ error: "E-Mail und Passwort (mind. 6 Zeichen) nötig" }, { status: 400 });
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  if (!email || !emailRegex.test(email)) {
+    return NextResponse.json({ error: "Bitte gib eine gültige E-Mail-Adresse ein" }, { status: 400 });
+  }
+  if (!password || password.length < 6) {
+    return NextResponse.json({ error: "Passwort muss mindestens 6 Zeichen haben" }, { status: 400 });
   }
   if (!pin || pin.length !== 4 || !/^\d{4}$/.test(pin)) {
     return NextResponse.json({ error: "PIN muss genau 4 Ziffern haben" }, { status: 400 });

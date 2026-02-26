@@ -11,6 +11,9 @@ export default function LoginPage() {
   const [pin, setPin] = useState("");
   const { login, register, loading, error } = useParentAuth();
 
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+  const showEmailHint = mode === "register" && email.length > 0 && !emailValid;
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (mode === "login") await login(email, password);
@@ -64,8 +67,20 @@ export default function LoginPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="eltern@beispiel.de"
                 required
-                className="w-full border-2 border-gray-200 dark:border-slate-600 rounded-kids px-4 py-3 text-kids-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white focus:border-kidsBlue outline-none"
+                className={`w-full border-2 rounded-kids px-4 py-3 text-kids-sm bg-white dark:bg-slate-700 text-gray-800 dark:text-white outline-none transition-colors ${
+                  showEmailHint
+                    ? "border-red-400 focus:border-red-400"
+                    : "border-gray-200 dark:border-slate-600 focus:border-kidsBlue"
+                }`}
               />
+              {showEmailHint && (
+                <p className="text-xs text-red-500 mt-1 font-semibold">
+                  ⚠️ Bitte eine gültige E-Mail eingeben (z.B. name@gmail.com) — du brauchst sie für einen Passwort-Reset!
+                </p>
+              )}
+              {mode === "register" && email.length > 0 && emailValid && (
+                <p className="text-xs text-kidsGreen mt-1 font-semibold">✓ E-Mail sieht gut aus</p>
+              )}
             </div>
             <div>
               <label className="block text-kids-sm font-bold text-gray-700 dark:text-gray-300 mb-1">
@@ -109,7 +124,7 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || (mode === "register" && !emailValid)}
               className="bg-kidsBlue text-white rounded-kids py-3 text-kids-sm font-black shadow-[0_4px_0_#3a9fc9] active:translate-y-1 transition-all disabled:opacity-60"
             >
               {loading ? "⏳ Bitte warten..." : mode === "login" ? "Anmelden 🔑" : "Konto erstellen ✨"}
